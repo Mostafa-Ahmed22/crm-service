@@ -1,0 +1,68 @@
+@host = http://localhost:3005
+
+########################### login
+
+# @name login
+
+POST {{host}}/auth/login 
+Content-Type: application/json
+
+{
+  "email": "superAdmin@Amer.com",
+  //"email": "matrouh_admin@Amer.com",
+  "password": "mostafa@222"
+}
+
+####################
+
+@authorization = Bearer {{login.response.body.result.access_token}}
+
+########################### create new role
+
+POST {{host}}/roles/create
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "en_name": "Admin",
+  "ar_name": "مدير النظام"
+  ,"company_project_id" : 3
+}
+
+########################### get roles
+
+# GET {{host}}/roles/get-roles?lang=en
+GET {{host}}/roles/get?lang=en
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+
+}
+
+
+########################### assign feature to role
+
+
+POST {{host}}/roles/assign-features-to-role
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "features" : [
+    {"role_id": "1bcce082-db9e-476d-9ba7-0864c8331700", "module_id": 20, "feature_id": 103, "status": 1},
+    {"role_id": "1bcce082-db9e-476d-9ba7-0864c8331700", "module_id": 20, "feature_id": 104, "status": 1},
+    {"role_id": "1bcce082-db9e-476d-9ba7-0864c8331700", "module_id": 20, "feature_id": 105 }
+  ]
+}
+
+########################### get features by role
+
+GET {{host}}/roles/get-role-features/1bcce082-db9e-476d-9ba7-0864c8331700
+Content-Type: application/json
+Authorization: {{authorization}}
+lang:en
+
+{
+
+}

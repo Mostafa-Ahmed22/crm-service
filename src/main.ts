@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ResponseFormatInterceptor } from './common/interceptors/custom.interceptor';
 import { ResponseFormatExceptionFilter } from './common/filters/custom.filter';
+import { LanguageInterceptor } from './common/interceptors/language.Interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,7 +14,7 @@ async function bootstrap() {
       transform: true, 
     }),
   );
-  app.useGlobalInterceptors(new ResponseFormatInterceptor());
+  app.useGlobalInterceptors(new LanguageInterceptor(), new ResponseFormatInterceptor());
   app.useGlobalFilters(new ResponseFormatExceptionFilter());
 
   await app.listen(process.env.PORT ?? 3005);

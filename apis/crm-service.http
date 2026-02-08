@@ -1,0 +1,227 @@
+@host = http://localhost:3005
+
+########################### login
+
+# @name login
+
+POST {{host}}/auth/login 
+Content-Type: application/json
+
+{
+  //"email": "superAdmin@Amer.com",
+  "email": "matrouh_admin@Amer.com",
+  "password": "mostafa@222"
+}
+
+####################
+
+@authorization = Bearer {{login.response.body.result.access_token}}
+
+# ########################### create new menu
+
+# POST {{host}}/auth/create-menu
+# Content-Type: application/json
+# Authorization: {{authorization}}
+
+# {
+#   "menuItems": [
+#     {"en_name": "Dashboard", "ar_name": "لوحة التحكم"},
+#     {"en_name": "PPM", "ar_name": "PPM"},
+#     {"en_name": "Definition", "ar_name": "التعريفات"},
+#     {"en_name": "Asset", "ar_name": "الاصول"},
+#     {"en_name": "Maintenance Plan", "ar_name": "خطط الصيانة"},
+#     {"en_name": "HouseKeeping", "ar_name": "تنظيف المنزل"},
+#     {"en_name": "Unit", "ar_name": "الوحدات"},
+#     {"en_name": "Service", "ar_name": "الخدمات"},
+#     {"en_name": "CRM", "ar_name": "الخدمات"},
+#     {"en_name": "System Settings", "ar_name": "اعدادات النظام"}
+#   ]
+# }
+
+########################### create new module
+
+POST {{host}}/auth/create-modules
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "menu_id": 74,
+  "moduleItems": [
+    {"en_name": "Client", "ar_name": "العميل"},
+    {"en_name": "Area", "ar_name": "المنطقة"},
+    {"en_name": "Positions", "ar_name": "الموظفين"},
+    {"en_name": "Safe", "ar_name": "الخزانة"},
+    {"en_name": "Project", "ar_name": "المشروع"},
+    {"en_name": "Location Type", "ar_name": "نوع الموقع"},
+    {"en_name": "Department", "ar_name": "القسم"},
+    {"en_name": "Category", "ar_name": "الفئة"},
+    {"en_name": "Brand", "ar_name": "العلامة التجارية"},
+    {"en_name": "Model", "ar_name": "الموديل"}
+  ]
+}
+
+# {
+#   "menu_id": 75,
+#   "moduleItems": [
+#     { "en_name": "Asset", "ar_name": "الأصل" },
+#     { "en_name": "Search Assets", "ar_name": "بحث الأصول" },
+#     { "en_name": "Add Asset", "ar_name": "إضافة أصل" }
+#   ]
+# }
+
+########################### create new feature
+
+POST {{host}}/auth/create-feature
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "featureItems": [
+    {"en_name": "Add", "ar_name": "إضافة"},
+    {"en_name": "Add Emergency MP", "ar_name": "إضافة طوارئ MP"},
+    {"en_name": "Assign Employee", "ar_name": "تعيين موظف"},
+    {"en_name": "Assign Ownership", "ar_name": "تعيين الملكية"},
+    {"en_name": "Cancel", "ar_name": "إلغاء"},
+    {"en_name": "Chat", "ar_name": "دردشة"},
+    {"en_name": "Collect Invoice", "ar_name": "تحصيل فاتورة"},
+    {"en_name": "Confirm", "ar_name": "تأكيد"},
+    {"en_name": "Current Work Orders", "ar_name": "أوامر العمل الحالية"},
+    {"en_name": "Daily Invoices", "ar_name": "الفواتير اليومية"},
+    {"en_name": "Daily Tasks", "ar_name": "المهام اليومية"},
+    {"en_name": "Delayed Tickets", "ar_name": "التذاكر المتأخرة"},
+    {"en_name": "Delete", "ar_name": "حذف"},
+    {"en_name": "Department / Service End of day", "ar_name": "القسم / الخدمة نهاية اليوم"},
+    {"en_name": "Deprecated Assets", "ar_name": "الأصول المهملة"},
+    {"en_name": "Detailed Daily Invoices", "ar_name": "الفواتير اليومية المفصلة"},
+    {"en_name": "Edit", "ar_name": "تعديل"},
+    {"en_name": "Edit Price", "ar_name": "تعديل السعر"},
+    {"en_name": "End Of Day", "ar_name": "نهاية اليوم"},
+    {"en_name": "Explicit", "ar_name": "صريح"},
+    {"en_name": "Export", "ar_name": "تصدير"},
+    {"en_name": "Export Data", "ar_name": "تصدير البيانات"},
+    {"en_name": "FullEnd Of Day", "ar_name": "نهاية اليوم الكاملة"},
+    {"en_name": "Grouped Daily Invoices", "ar_name": "الفواتير اليومية المجمعة"},
+    {"en_name": "History", "ar_name": "السجل"},
+    {"en_name": "Lock User", "ar_name": "قفل المستخدم"},
+    {"en_name": "Mobile Error Logs", "ar_name": "سجلات أخطاء الهاتف"},
+    {"en_name": "Mobile users only", "ar_name": "للمستخدمين عبر الهاتف فقط"},
+    {"en_name": "Modify Unit Rent Eligibility", "ar_name": "تعديل أهلية إيجار الوحدة"},
+    {"en_name": "Notification Center", "ar_name": "مركز الإشعارات"},
+    {"en_name": "Online Payments Report", "ar_name": "تقرير المدفوعات عبر الإنترنت"},
+    {"en_name": "Pending Requests", "ar_name": "الطلبات المعلقة"},
+    {"en_name": "Pending Tickets", "ar_name": "التذاكر المعلقة"},
+    {"en_name": "Read", "ar_name": "قراءة"},
+    {"en_name": "Read All", "ar_name": "قراءة الكل"},
+    {"en_name": "Reschedule Approval", "ar_name": "إعادة جدولة الموافقة"},
+    {"en_name": "Reschedule Approval Without Limits", "ar_name": "إعادة جدولة الموافقة بدون حدود"},
+    {"en_name": "Reset Password", "ar_name": "إعادة تعيين كلمة المرور"},
+    {"en_name": "Respond", "ar_name": "رد"},
+    {"en_name": "Review", "ar_name": "مراجعة"},
+    {"en_name": "Search All Requests", "ar_name": "بحث في جميع الطلبات"},
+    {"en_name": "Search Requests", "ar_name": "بحث في الطلبات"},
+    {"en_name": "Show Calendar", "ar_name": "عرض التقويم"},
+    {"en_name": "System Configuration", "ar_name": "إعدادات النظام"},
+    {"en_name": "System Logs", "ar_name": "سجلات النظام"},
+    {"en_name": "User Projects", "ar_name": "مشاريع المستخدم"},
+    {"en_name": "User Requests", "ar_name": "طلبات المستخدم"},
+    {"en_name": "Visits", "ar_name": "الزيارات"},
+    {"en_name": "Void", "ar_name": "إلغاء"},
+    {"en_name": "Void Requests", "ar_name": "إلغاء الطلبات"},
+    {"en_name": "Voids", "ar_name": "الإلغاءات"}
+  ]
+}
+
+
+
+########################### update or assign feature to module
+
+
+POST {{host}}/auth/assign-features-to-module
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "features" : [
+    { "module_id": 20, "feature_id": 103, "status": 1},
+    { "module_id": 20, "feature_id": 104 },
+    { "module_id": 20, "feature_id": 105, "status": 1}
+  ]
+}
+
+########################### create new role
+
+POST {{host}}/auth/create-role
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "en_name": "Admin",
+  "ar_name": "مدير النظام"
+  ,"company_project_id" : 2
+}
+
+########################### get roles
+
+# GET {{host}}/auth/get-roles?lang=en
+GET {{host}}/auth/get-roles?lang=en
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+
+}
+
+########################### assign feature to role
+
+
+POST {{host}}/auth/assign-features-to-role
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "features" : [
+    {"role_id": "1bcce082-db9e-476d-9ba7-0864c8331700", "module_id": 20, "feature_id": 103, "status": 1},
+    {"role_id": "1bcce082-db9e-476d-9ba7-0864c8331700", "module_id": 20, "feature_id": 104, "status": 1},
+    {"role_id": "1bcce082-db9e-476d-9ba7-0864c8331700", "module_id": 20, "feature_id": 105 }
+  ]
+}
+
+########################### get features
+
+GET {{host}}/auth/get-features?lang=en
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+
+}
+
+########################### get features by role
+
+GET {{host}}/auth/get-role-features/1bcce082-db9e-476d-9ba7-0864c8331700
+Content-Type: application/json
+Authorization: {{authorization}}
+lang:en
+
+{
+
+}
+
+########################### create new Employee
+
+# POST {{host}}/auth/create-employee
+# Content-Type: application/json
+# Authorization: {{authorization}}
+
+# {
+#   "email": "matrouh_admin@Amer.com",
+#   "user_name": "mostafaAhmed",
+#   "full_name": "Mostafa Ahmed",
+#   "phone_number": "01550396165",
+#   "is_male": 1,
+#   "password": "mostafa@222",
+#   "role_id": "1bcce082-db9e-476d-9ba7-0864c8331700",
+#   "department_id": 1,
+#   "position_id": 1
+# }
+
