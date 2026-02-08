@@ -1,0 +1,36 @@
+@host = http://localhost:3005
+
+########################### login
+
+# @name login
+
+POST {{host}}/auth/login 
+Content-Type: application/json
+
+{
+  //"email": "superAdmin@Amer.com",
+  "email": "matrouh_admin@Amer.com",
+  "password": "mostafa@222"
+}
+
+####################
+
+@authorization = Bearer {{login.response.body.result.access_token}}
+
+########################### create new Employee
+
+POST {{host}}/employees/create
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "email": "matrouh_adminn@Amer.com",
+  "user_name": "mostafaAAhmed",
+  "full_name": "Mostafa Ahmed",
+  "phone_number": "01550396165",
+  "is_male": 1,
+  "password": "mostafa@222",
+  "role_id": "1bcce082-db9e-476d-9ba7-0864c8331700",
+  "department_id": 1,
+  "position_id": 1
+}
