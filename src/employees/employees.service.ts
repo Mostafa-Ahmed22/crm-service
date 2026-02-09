@@ -37,7 +37,7 @@ export class EmployeesService {
         }
         await this.mailerService.sendMail({
           to: [body.email],
-          subject: 'Welcome to My Porto CRM!',
+          subject: 'Welcome to MyPorto CRM!',
           html: this.helperService.getPasswordTemplate(body.full_name, password),
         });
         const { password: _, ...result } = employee;

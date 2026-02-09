@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { Roles } from 'src/decorators/roles.decorator';
 import { adminsEnums } from 'src/auth/enums/auth.enum';
+import { CreateRoleDto } from './dtos/create-role.dto';
 
 @Controller('roles')
 export class RolesController {
@@ -9,7 +10,7 @@ export class RolesController {
 
   // @Roles(adminsEnums.en.SUPER_ADMIN, adminsEnums.en.SITE_ADMIN)
   @Post("create")
-  async createRole(@Req() req, @Body() body: { en_name: string, ar_name: string, company_project_id: number }) {
+  async createRole(@Req() req, @Body() body: CreateRoleDto) {
     return this.rolesService.createRole(body, req.user);
   }
 

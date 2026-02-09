@@ -79,9 +79,9 @@ export class ModulesService {
 
   }
 
-  async getFeatures(language: 'en' | 'ar') {
+  async getFeatures(language: 'en' | 'ar', filter:string) {
     const features = await this.prisma.module_features.findMany({
-      where: { status: 1 },
+      where: { status: 1, modules : {[`${language}_name`]: { contains : filter, mode: 'insensitive'}} },
       include: {
         modules: { include: { menu: true } },
         features: true,

@@ -1,6 +1,7 @@
 import { Controller, Post, Body, Req, Get, Query, Param } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Public } from "../decorators/public.decorator";
+import { LoginDto } from "./dtos/login.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -8,8 +9,8 @@ export class AuthController {
 
   @Public()
   @Post("login")
-  async login(@Req() req, @Body() body: { email: string; password: string }) {
-    const user = await this.authService.validateEmployee(body.email, body.password);
+  async login(@Req() req, @Body() loginDto: LoginDto) {    
+    const user = await this.authService.validateEmployee(loginDto);
     if (!user) {
       return { error: "Invalid credentials" };
     }

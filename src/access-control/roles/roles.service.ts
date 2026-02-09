@@ -2,12 +2,13 @@ import { BadRequestException, ConflictException, Injectable, InternalServerError
 import { adminsEnums } from 'src/auth/enums/auth.enum';
 import { Prisma } from 'src/generated/postgres/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateRoleDto } from './dtos/create-role.dto';
 
 @Injectable()
 export class RolesService {
   constructor(private prisma: PrismaService) {}
 
-    async createRole(data: { en_name: string, ar_name: string, company_project_id: number }, user: any) {
+    async createRole(data: CreateRoleDto, user: any) {
     let { en_name, ar_name, company_project_id } = data;
 
     if (!company_project_id) {

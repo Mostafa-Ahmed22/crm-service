@@ -3,15 +3,16 @@ import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from '../prisma/prisma.service';
 import { PasswordService } from "./password.service";
 import { MailService } from "src/mail/mail.service";
+import { LoginDto } from "./dtos/login.dto";
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly passwordService: PasswordService,
-    private readonly mailerService: MailService
   ) { }
-  async validateEmployee(email: string, password: string) {
+  async validateEmployee(body: LoginDto) {
+    const { email, password } = body;
     const employee = await this.prisma.employees.findUnique({
       where: { email },
       include: { roles: { include: { company_project: true } } },

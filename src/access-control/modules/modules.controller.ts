@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
 import { ModulesService } from './modules.service';
 import { Roles } from 'src/decorators/roles.decorator';
 import { adminsEnums } from 'src/auth/enums/auth.enum';
@@ -31,8 +31,8 @@ export class ModulesController {
   }
 
   @Get("get-features")
-  async getFeatures(@Req() req) {
-    return this.modulesService.getFeatures(req.lang);
+  async getFeatures(@Req() req, @Query("moduleName") filter: string) {
+    return this.modulesService.getFeatures(req.lang, filter);
   }
 
   @Roles(adminsEnums.en.SUPER_ADMIN, adminsEnums.en.SITE_ADMIN)

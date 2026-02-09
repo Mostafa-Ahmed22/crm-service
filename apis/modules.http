@@ -133,7 +133,7 @@ Authorization: {{authorization}}
 
 ########################### get features
 
-GET {{host}}/modules/get-features?lang=en
+GET {{host}}/modules/get-features?lang=en&moduleName=d
 Content-Type: application/json
 Authorization: {{authorization}}
 

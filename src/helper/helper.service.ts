@@ -22,7 +22,7 @@ export class HelperService {
         <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; margin:auto; background:#ffffff; border:1px solid #ddd; border-radius:6px;">
           <tr>
             <td style="background:#004aad; color:#fff; padding:15px; text-align:center; font-size:18px; font-weight:bold;">
-              Welcome to My Porto CRM
+              Welcome to MyPorto CRM
             </td>
           </tr>
           <tr>
@@ -30,7 +30,7 @@ export class HelperService {
               <p>Dear ${name},</p>
               <p>We’re glad to have you onboard. Here are your login credentials:</p>
               <p><strong>Password:</strong> ${password}</p>
-              <p>Best regards,<br>The My Porto CRM Team</p>
+              <p>Best regards,<br> <br>The MyPorto CRM Team</p>
               </td>
               </tr>
               <tr>
