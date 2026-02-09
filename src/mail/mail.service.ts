@@ -1,22 +1,23 @@
 // mail.service.ts
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
   private transporter: nodemailer.Transporter;
 
-  constructor() {
+  constructor(private configService: ConfigService) {
     this.transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST,
+      host: this.configService.get<string>('services.mailerHost'),
       // host: 'smtp.netfirms.com',
       port: 587,
       secure: false, // STARTTLS
       auth: {
-        user: process.env.MAIL_USERNAME,
+        user: this.configService.get<string>('services.mailerUser'),
         // user: 'info@redcastlecard.com',
         // pass: 'Ahly@6161',
-        pass: process.env.MAIL_PASSWORD,
+        pass: this.configService.get<string>('services.mailerPassword'),
   },
   tls: {
     rejectUnauthorized: false, // <-- ignore self-signed cert
@@ -34,10 +35,11 @@ export class MailService {
     html?: string;
     attachments?: { filename: string; path: string }[];
   }) {
+    
     const { to, cc, bcc, subject, text, html, attachments } = reqBody;
 
     await this.transporter.sendMail({
-      from: process.env.MAIL,
+      from: this.configService.get<string>('services.mailerUser'),
       to: to.join(', '), 
       ...(cc && { cc: cc.join(', ') }),
       ...(bcc && { bcc: bcc.join(', ') }),

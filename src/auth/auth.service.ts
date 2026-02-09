@@ -38,12 +38,6 @@ export class AuthService {
       company_project_id: employee.roles.company_project_id, company_code: employee.roles.company_project.company_code,
       project_code: employee.roles.company_project.project_code, project_name: employee.roles.company_project.en_name,
     };
-    await this.mailerService.sendMail({
-      to: ["Mostafa.Ahmed@acapitalholding.com"],
-      subject: 'Welcome to CRM!',
-      text: 'Thanks for joining our platform.',
-    });
-
     return { ...payload, access_token: this.jwtService.sign(payload) };
   }
 

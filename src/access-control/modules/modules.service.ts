@@ -1,9 +1,9 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Prisma } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMenuDto } from './dtos/create-menu.dto';
 import { CreateModuleDto } from './dtos/create-modules.dto';
 import { CreateFeatureDto } from './dtos/create-features.dto';
+import { Prisma } from 'src/generated/postgres/prisma/client';
 
 @Injectable()
 export class ModulesService {
