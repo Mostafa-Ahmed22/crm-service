@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { adminsEnums } from 'src/auth/enums/auth.enum';
-import { Prisma } from 'src/generated/prisma/client';
+import { Prisma } from 'src/generated/postgres/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -13,7 +13,6 @@ export class RolesService {
     if (!company_project_id) {
       company_project_id = user.company_project_id
     }
-
     try {
       return await this.prisma.roles.create({ data: { en_name, ar_name, company_project_id, created_by: user.employee_name } });
     } catch (error) {

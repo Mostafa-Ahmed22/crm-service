@@ -20,10 +20,6 @@ export class CreateEmployeeDto {
   @IsInt()
   is_male: number; // 1 or 0, depending on your convention
 
-  @IsString()
-  @IsNotEmpty()
-  password: string;
-
   @IsOptional()
   @IsUUID()
   role_id?: string;

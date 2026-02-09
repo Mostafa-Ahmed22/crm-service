@@ -1,0 +1,43 @@
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class HelperService {
+
+  generateRandomPass(passLength){ 
+    let pass = ''; 
+    let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 
+        + 'abcdefghijklmnopqrstuvwxyz'
+        + '0123456789@#$'; 
+      
+    for (let i = 1; i <= passLength; i++) { 
+        var char = Math.floor(Math.random() * str.length + 1); 
+        pass += str.charAt(char) 
+    } 
+    return pass; 
+  }
+
+  getPasswordTemplate(name:string, password:string){
+    return `<html>
+      <body style="font-family: Arial, sans-serif; background-color:#f9f9f9; padding:20px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px; margin:auto; background:#ffffff; border:1px solid #ddd; border-radius:6px;">
+          <tr>
+            <td style="background:#004aad; color:#fff; padding:15px; text-align:center; font-size:18px; font-weight:bold;">
+              Welcome to My Porto CRM
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px; color:#333;">
+              <p>Dear ${name},</p>
+              <p>We’re glad to have you onboard. Here are your login credentials:</p>
+              <p><strong>Password:</strong> ${password}</p>
+              <p>Best regards,<br>The My Porto CRM Team</p>
+              </td>
+              </tr>
+              <tr>
+              </tr>
+              </table>
+              </body>
+              </html>
+              `
+    }
+  }

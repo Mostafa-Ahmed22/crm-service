@@ -1,9 +1,6 @@
 import { Controller, Post, Body, Req, Get, Query, Param } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Public } from "../decorators/public.decorator";
-import { Roles } from "../decorators/roles.decorator";
-import { adminsEnums } from "./enums/auth.enum";
-import { CreateEmployeeDto } from "../employees/dtos/create-employee.dto";
 
 @Controller("auth")
 export class AuthController {
