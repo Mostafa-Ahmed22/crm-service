@@ -4,7 +4,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { adminsEnums } from 'src/auth/enums/auth.enum';
 import { CreateMenuDto } from './dtos/create-menu.dto';
 import { CreateFeatureDto } from './dtos/create-features.dto';
-import { CreateModuleDto } from './dtos/create-modules.dto';
+import { CreateModulesDto } from './dtos/create-modules.dto';
 
 @Controller('modules')
 export class ModulesController {
@@ -20,7 +20,7 @@ export class ModulesController {
 
   @Roles(adminsEnums.en.SUPER_ADMIN)
   @Post("create-modules")
-  async createModule(@Body() body: CreateModuleDto) {
+  async createModule(@Body() body: CreateModulesDto) {
     return this.modulesService.createModule(body);
   }
 

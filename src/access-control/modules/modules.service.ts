@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMenuDto } from './dtos/create-menu.dto';
-import { CreateModuleDto } from './dtos/create-modules.dto';
+import { CreateModulesDto } from './dtos/create-modules.dto';
 import { CreateFeatureDto } from './dtos/create-features.dto';
 import { Prisma } from 'src/generated/postgres/prisma/client';
 
@@ -35,14 +35,9 @@ export class ModulesService {
 
   }
 
-    async createModule(data: CreateModuleDto) {
+    async createModule(data: CreateModulesDto) {
     try {
-      const itemsWithMenuId = data.moduleItems.map(item => ({
-        ...item,
-        menu_id: data.menu_id,   // inject menu_id into each record
-      }));
-
-      return await this.prisma.modules.createMany({ data: itemsWithMenuId });
+      return await this.prisma.modules.createMany({ data: data.moduleItems });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2003") {
