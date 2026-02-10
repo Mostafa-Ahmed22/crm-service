@@ -33,7 +33,7 @@ Authorization: {{authorization}}
     { "en_name": "HouseKeeping", "ar_name": "التنظيف" },
     { "en_name": "Unit", "ar_name": "الوحدة" },
     { "en_name": "Services", "ar_name": "الخدمات" },
-    { "en_name": "crm", "ar_name": "إدارة علاقات العملاء" },
+    { "en_name": "CRM", "ar_name": "إدارة علاقات العملاء" },
     { "en_name": "Customers", "ar_name": "العملاء" },
     { "en_name": "DocumentLibrary", "ar_name": "مكتبة المستندات" },
     { "en_name": "News", "ar_name": "الأخبار" },
@@ -267,7 +267,7 @@ Authorization: {{authorization}}
 
 ########################### get features
 
-GET {{host}}/modules/get-features?lang=en
+GET {{host}}/modules/get-features?lang=ar
 # GET {{host}}/modules/get-features?lang=en&moduleName=d
 Content-Type: application/json
 Authorization: {{authorization}}
