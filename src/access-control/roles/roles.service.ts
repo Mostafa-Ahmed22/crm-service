@@ -35,7 +35,7 @@ export class RolesService {
     }
   }
 
-    async getRoles(language: string, user: any) {
+    async getRoles(language: string, user: any, filter: string) {
 
     const userRoleName = user.role_name;
     // fix sign with dto
@@ -44,7 +44,7 @@ export class RolesService {
 
     const roles = await this.prisma.roles.findMany({
       where: {
-        created_by: { not: null },
+        created_by: { not: null }, [`${language}_name`]: { contains : filter, mode: 'insensitive'},
         ...(userRoleName !== adminsEnums.en.SUPER_ADMIN ? { company_project_id: company_project_id } : {})
 
       }

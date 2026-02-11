@@ -32,9 +32,10 @@ Authorization: {{authorization}}
 ########################### get roles
 
 # GET {{host}}/roles/get-roles?lang=en
-GET {{host}}/roles/get?lang=ar
+GET {{host}}/roles/get?roleName=admin
 Content-Type: application/json
 Authorization: {{authorization}}
+lang:en
 
 {
 
