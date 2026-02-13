@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { PasswordService } from "../password.service";
-import { adminsEnums, superAdminEnums } from "../enums/auth.enum";
+import { activeStatusEnums, isDeleteStatusEnums, superAdminEnums } from "src/common/enums/shared.enum";
 
 @Injectable()
 export class SeedService implements OnModuleInit {
@@ -20,32 +20,41 @@ export class SeedService implements OnModuleInit {
 
     // 2. Seed SuperAdmin role
     const adminRole = await this.prisma.roles.upsert({
-      where: { en_name_company_project_id: { en_name: adminsEnums.en.SUPER_ADMIN, company_project_id: companyProject.id } },
+      where: { en_name_company_project_id_is_deleted: { en_name: superAdminEnums.ROLE_EN_NAME,
+      company_project_id: companyProject.id, is_deleted: isDeleteStatusEnums.NOT_DELETED 
+        } 
+      },
       update: {},
       create: {
-        en_name: adminsEnums.en.SUPER_ADMIN, ar_name: adminsEnums.ar.SUPER_ADMIN,
+        en_name: superAdminEnums.ROLE_EN_NAME, ar_name: superAdminEnums.ROLE_AR_NAME,
         company_project_id: companyProject.id
       },
     });
 
     // 3. Seed SuperAdmin department
     const adminDepartment = await this.prisma.departments.upsert({
-      where: { project_id_en_name: { project_id: companyProject.id, en_name: superAdminEnums.DEPARTMENT_EN_NAME } },
+      where: { project_id_en_name_is_deleted: { project_id: companyProject.id, en_name: superAdminEnums.DEPARTMENT_EN_NAME,
+        is_deleted: isDeleteStatusEnums.NOT_DELETED
+       } },
       update: {},
       create: {
         en_name: superAdminEnums.DEPARTMENT_EN_NAME,
         ar_name:superAdminEnums.DEPARTMENT_AR_NAME,
-        project_id: companyProject.id
+        project_id: companyProject.id,
+        status: activeStatusEnums.INACTIVE
       },
     });
     // 4. Seed SuperAdmin position
     const adminPosition = await this.prisma.positions.upsert({
-      where: { project_id_en_name: { project_id: companyProject.id, en_name: superAdminEnums.POSITION_EN_NAME } },
+      where: { project_id_en_name_is_deleted: { project_id: companyProject.id, en_name: superAdminEnums.POSITION_EN_NAME
+        , is_deleted: isDeleteStatusEnums.NOT_DELETED
+       } },
       update: {},
       create: {
         en_name: superAdminEnums.POSITION_EN_NAME,
         ar_name:superAdminEnums.POSITION_AR_NAME,
-        project_id: companyProject.id
+        project_id: companyProject.id,
+        status: activeStatusEnums.INACTIVE
       },
     });
 

@@ -1,7 +1,7 @@
 import { IsString, IsNotEmpty, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class MenuItemDto {
+export class PrivilegeItemDto {
   @IsString()
   @IsNotEmpty()
   en_name: string;
@@ -11,8 +11,8 @@ export class MenuItemDto {
   ar_name: string;
 }
 
-export class CreateMenuDto {
+export class CreatePrivilegeDto {
   @ValidateNested({ each: true })
-  @Type(() => MenuItemDto)
-  menuItems: MenuItemDto[];
+  @Type(() => PrivilegeItemDto)
+  privilegeItems: PrivilegeItemDto[];
 }

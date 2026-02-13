@@ -4,11 +4,12 @@
 
 # @name login
 
-POST {{host}}/auth/login 
+POST {{host}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "superAdmin@Amer.com",
+  //"email": "superAdmin@Amer.com",
+  "email": "mostafa.ahmed@acapitalholding.com",
   "password": "mostafa@222"
 }
 
@@ -18,17 +19,30 @@ Content-Type: application/json
 
 ########################### create new Employee
 
-POST {{host}}/employees/create
+POST {{host}}/employees
 Content-Type: application/json
 Authorization: {{authorization}}
 
 {
   "email": "mostafa.ahmed@acapitalholding.com",
-  "user_name": "mostafaAhmedd",
+  "user_name": "mostafaAhmed",
   "full_name": "Mostafa Ahmed",
   "phone_number": "0112428915",
   "is_male": 1,
-  "role_id": "39ae8b8e-1863-4884-bead-b80593eb2f38",
+  "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45",
   "department_id": 1,
   "position_id": 1
+}
+
+
+#################### get all Employees
+
+GET {{host}}/employees?name=mostafa&page=1&limit=1
+# GET {{host}}/employees?name=mostafa
+Content-Type: application/json
+Authorization: {{authorization}}
+lang:en
+
+{
+
 }

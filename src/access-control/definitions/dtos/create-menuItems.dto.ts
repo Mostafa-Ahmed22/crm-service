@@ -1,7 +1,7 @@
 import { IsInt, IsString, IsNotEmpty, ValidateNested, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class ModuleItemDto {
+export class MenuItemDto {
   @IsInt()
   @IsNotEmpty()
   menu_id: number;
@@ -15,9 +15,9 @@ export class ModuleItemDto {
   ar_name: string;
 }
 
-export class CreateModulesDto {
+export class CreateMenuItemsDto {
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ModuleItemDto)
-  moduleItems: ModuleItemDto[];
+  @Type(() => MenuItemDto)
+  menuItems: MenuItemDto[];
 }

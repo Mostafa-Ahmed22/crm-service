@@ -8,8 +8,8 @@ POST {{host}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "superAdmin@Amer.com",
-  //"email": "matrouh_admin@Amer.com",
+  //"email": "superAdmin@Amer.com",
+  "email": "mostafa.ahmed@acapitalholding.com",
   "password": "mostafa@222"
 }
 
@@ -19,7 +19,7 @@ Content-Type: application/json
 
 ########################### create new role
 
-POST {{host}}/roles/create
+POST {{host}}/roles
 Content-Type: application/json
 Authorization: {{authorization}}
 
@@ -31,8 +31,8 @@ Authorization: {{authorization}}
 
 ########################### get roles
 
-# GET {{host}}/roles/get-roles?lang=en
-GET {{host}}/roles/get?roleName=admin
+GET {{host}}/roles?page=1&limit=1
+# GET {{host}}/roles?roleName=admin
 Content-Type: application/json
 Authorization: {{authorization}}
 lang:en
@@ -45,21 +45,115 @@ lang:en
 ########################### assign feature to role
 
 
-POST {{host}}/roles/assign-features-to-role
+POST {{host}}/roles/assign-privilege-to-role
 Content-Type: application/json
 Authorization: {{authorization}}
 
 {
-  "features" : [
-    {"role_id": "1bcce082-db9e-476d-9ba7-0864c8331700", "module_id": 20, "feature_id": 103, "status": 1},
-    {"role_id": "1bcce082-db9e-476d-9ba7-0864c8331700", "module_id": 20, "feature_id": 104, "status": 1},
-    {"role_id": "1bcce082-db9e-476d-9ba7-0864c8331700", "module_id": 20, "feature_id": 105 }
+  "privileges": [
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 1, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 46, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 46, "privilege_id": 29, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 46, "privilege_id": 1, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 46, "privilege_id": 21, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 46, "privilege_id": 3, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 46, "privilege_id": 17, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 46, "privilege_id": 13, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 47, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 47, "privilege_id": 17, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 48, "privilege_id": 17, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 48, "privilege_id": 1, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 48, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 48, "privilege_id": 21, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 48, "privilege_id": 13, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 50, "privilege_id": 1, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 50, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 50, "privilege_id": 17, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 50, "privilege_id": 21, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 50, "privilege_id": 13, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 50, "privilege_id": 6, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 59, "privilege_id": 1, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 61, "privilege_id": 18, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 61, "privilege_id": 17, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 61, "privilege_id": 25, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 61, "privilege_id": 35, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 61, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 61, "privilege_id": 13, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 61, "privilege_id": 33, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 67, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 67, "privilege_id": 17, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 67, "privilege_id": 1, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 69, "privilege_id": 1, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 69, "privilege_id": 17, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 69, "privilege_id": 34, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 71, "privilege_id": 1, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 71, "privilege_id": 39, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 71, "privilege_id": 34, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 72, "privilege_id": 17, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 72, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 72, "privilege_id": 7, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 72, "privilege_id": 49, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 72, "privilege_id": 23, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 72, "privilege_id": 35, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 72, "privilege_id": 13, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 72, "privilege_id": 19, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 72, "privilege_id": 1, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 77, "privilege_id": 50, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 91, "privilege_id": 31, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 95, "privilege_id": 16, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 97, "privilege_id": 51, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 98, "privilege_id": 14, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 99, "privilege_id": 9, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 100, "privilege_id": 45, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 101, "privilege_id": 15, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 104, "privilege_id": 13, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 104, "privilege_id": 38, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 104, "privilege_id": 26, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 104, "privilege_id": 47, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 104, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 104, "privilege_id": 17, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 104, "privilege_id": 46, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 104, "privilege_id": 28, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 106, "privilege_id": 1, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 107, "privilege_id": 32, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 110, "privilege_id": 1, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 110, "privilege_id": 34, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 110, "privilege_id": 13, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 110, "privilege_id": 17, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 111, "privilege_id": 20, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 111, "privilege_id": 44, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 112, "privilege_id": 17, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 112, "privilege_id": 1, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 112, "privilege_id": 13, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 112, "privilege_id": 34, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 114, "privilege_id": 1, "status": 1 },
+
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 115, "privilege_id": 27, "status": 1 },
+    { "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45", "menuItem_id": 115, "privilege_id": 34, "status": 1 }
   ]
+
 }
 
 ########################### get features by role
 
-GET {{host}}/roles/get-role-features/1bcce082-db9e-476d-9ba7-0864c8331700
+GET {{host}}/roles/get-role-privileges?role_id=d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45
 Content-Type: application/json
 Authorization: {{authorization}}
 lang:en

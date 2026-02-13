@@ -1,8 +1,8 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { adminsEnums } from 'src/auth/enums/auth.enum';
 import { Prisma } from 'src/generated/postgres/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoleDto } from './dtos/create-role.dto';
+import { activeStatusEnums, isDeleteStatusEnums, superAdminEnums } from 'src/common/enums/shared.enum';
 
 @Injectable()
 export class RolesService {
@@ -15,7 +15,11 @@ export class RolesService {
       company_project_id = user.company_project_id
     }
     try {
-      return await this.prisma.roles.create({ data: { en_name, ar_name, company_project_id, created_by: user.employee_name } });
+      const role = await this.prisma.roles.create({ data: { en_name, ar_name, company_project_id, created_by: user.user_name } });
+      if (!role) {
+        throw new InternalServerErrorException('Failed to create role');
+      }
+      return {id : role.id, message : 'Role created successfully'};
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         // Unique constraint violation
@@ -35,7 +39,7 @@ export class RolesService {
     }
   }
 
-    async getRoles(language: string, user: any, filter: string) {
+    async getRoles(language: string, user: any, pagination: { page: number, limit: number, skip: number }, filter: string) {
 
     const userRoleName = user.role_name;
     // fix sign with dto
@@ -45,34 +49,51 @@ export class RolesService {
     const roles = await this.prisma.roles.findMany({
       where: {
         created_by: { not: null }, [`${language}_name`]: { contains : filter, mode: 'insensitive'},
-        ...(userRoleName !== adminsEnums.en.SUPER_ADMIN ? { company_project_id: company_project_id } : {})
+        ...(userRoleName !== superAdminEnums.ROLE_EN_NAME ? { company_project_id: company_project_id } : {})
+      },
+      skip: pagination.skip,
+      take: pagination.limit,
+    });
 
+
+     // Get total count for pagination metadata
+    const totalCount = await this.prisma.roles.count({
+      where: {
+        created_by: { not: null },
+        [`${language}_name`]: { contains: filter, mode: 'insensitive' },
+        ...(userRoleName !== superAdminEnums.ROLE_EN_NAME 
+          ? { company_project_id: company_project_id } 
+          : {})
       }
     });
 
     // Transform into [{id, name}]
     const result: { id: string; name: string }[] = roles.map(r => { return { id: r.id, name: r[`${language}_name`] } });
 
-    return result;
+    return {
+      totalCount,
+      totalPages: Math.ceil(totalCount / pagination.limit),
+      roles: result
+    };
   }
 
-  async assignFeatureToRole(data: { features: { role_id: string, module_id: number, feature_id: number, status: number }[] }) {
+  async assignPrivilegeToRole(data: { privileges: { role_id: string, menuItem_id: number, privilege_id: number, status: number }[] }) {
     try {
       const results = await Promise.all(
-        data.features.map((feature) =>
-          this.prisma.role_features.upsert({
+        data.privileges.map((privilege) =>
+          this.prisma.role_privileges.upsert({
             where: {
-              role_id_module_id_feature_id: {
-                role_id: feature.role_id,
-                module_id: feature.module_id,
-                feature_id: feature.feature_id,
+              role_id_menuItem_id_privilege_id: {
+                role_id: privilege.role_id,
+                menuItem_id: privilege.menuItem_id,
+                privilege_id: privilege.privilege_id,
               },
             },
             update: {
-              status: feature.status,
+              status: privilege.status,
               updated_at: new Date() // update only status if exists
             },
-            create: feature, // insert if not exists
+            create: privilege, // insert if not exists
           })
         )
       );
@@ -80,6 +101,7 @@ export class RolesService {
       return results;
 
     } catch (error) {
+      
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2003") {
           throw new BadRequestException("Invalid foreign key reference for role_id or menu_id");
@@ -91,43 +113,48 @@ export class RolesService {
       throw new InternalServerErrorException("Failed to assign modules to role");
     }
   }
-  async getRoleFeatures(role_id: string, language: 'en' | 'ar') {
+  async getRolePrivileges(role_id: string, language: 'en' | 'ar') {
 
-    const features = await this.prisma.role_features.findMany({
-      where: { role_id, status: 1 },
+    const privileges = await this.prisma.role_privileges.findMany({
+      where: { role_id, status: activeStatusEnums.ACTIVE, roles : { is_deleted: isDeleteStatusEnums.NOT_DELETED},
+        privileges : {is_deleted: isDeleteStatusEnums.NOT_DELETED},
+        menuItems : {is_deleted: isDeleteStatusEnums.NOT_DELETED,
+          menu: {is_deleted: isDeleteStatusEnums.NOT_DELETED}
+        },
+       },
       include: {
-        modules: { include: { menu: true } },
-        features: true,
+        menuItems: { include: { menu: true } },
+        privileges: true,
       },
     });
 
     // Transform into nested structure
     const result: Record<string, any> = {};
 
-    for (const f of features) {
-      const menuName = f.modules.menu[`${language}_name`];
-      const moduleName = f.modules[`${language}_name`];
-      const featureName = f.features[`${language}_name`];
+    for (const privilege of privileges) {
+      const menuName = privilege.menuItems.menu[`${language}_name`];
+      const menuItemName = privilege.menuItems[`${language}_name`];
+      const privilegeName = privilege.privileges[`${language}_name`];
 
       if (!result[menuName]) {
         result[menuName] = {
-          id: f.modules.menu.id,
-          modules: {},
+          id: privilege.menuItems.menu.id,
+          menuItems: {},
         };
       }
 
-      if (!result[menuName].modules[moduleName]) {
-        result[menuName].modules[moduleName] = {
-          id: f.modules.id,
-          name: moduleName,
-          features: [],
+      if (!result[menuName].menuItems[menuItemName]) {
+        result[menuName].menuItems[menuItemName] = {
+          id: privilege.menuItems.id,
+          name: menuItemName,
+          privileges: [],
         };
       }
 
-      result[menuName].modules[moduleName].features.push({
-        id: f.features.id,
-        name: featureName,
-        status: f.status,
+      result[menuName].menuItems[menuItemName].privileges.push({
+        id: privilege.privileges.id,
+        name: privilegeName,
+        status: privilege.status,
       });
     }
 
@@ -135,7 +162,7 @@ export class RolesService {
     const menus = Object.entries(result).map(([menuName, menu]) => ({
       menuName,
       id: menu.id,
-      modules: Object.values(menu.modules),
+      menuItems: Object.values(menu.menuItems),
     }));
 
     return menus;

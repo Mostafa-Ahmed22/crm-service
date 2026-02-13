@@ -1,7 +1,7 @@
 import { IsString, IsNotEmpty, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class FeatureItemDto {
+export class MenuItemDto {
   @IsString()
   @IsNotEmpty()
   en_name: string;
@@ -11,8 +11,8 @@ export class FeatureItemDto {
   ar_name: string;
 }
 
-export class CreateFeatureDto {
+export class CreateMenuDto {
   @ValidateNested({ each: true })
-  @Type(() => FeatureItemDto)
-  featureItems: FeatureItemDto[];
+  @Type(() => MenuItemDto)
+  menus: MenuItemDto[];
 }

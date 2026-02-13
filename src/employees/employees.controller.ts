@@ -1,16 +1,18 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
-import { adminsEnums } from 'src/auth/enums/auth.enum';
-import { Roles } from 'src/decorators/roles.decorator';
 import { CreateEmployeeDto } from './dtos/create-employee.dto';
 
 @Controller('employees')
 export class EmployeesController {
   constructor(private employeesService: EmployeesService) { }
   
-  @Roles(adminsEnums.en.SUPER_ADMIN, adminsEnums.en.SITE_ADMIN)
-  @Post("create")
+  @Post()
   async createEmployee(@Req() req, @Body() body: CreateEmployeeDto) {
     return this.employeesService.createEmployee(req.user, body);
+  }
+
+  @Get() 
+  async getAllEmployees(@Req() req, @Query('name') filter: string) {
+    return this.employeesService.getAllEmployees(req.lang, req.user, req.pagination, filter);
   }
 }

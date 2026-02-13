@@ -26,7 +26,7 @@ export class ResponseFormatExceptionFilter implements ExceptionFilter {
       message = exception.message;
     }
 
-    response.status(HttpStatus.ACCEPTED).json({
+    response.status(HttpStatus.OK).json({
       result: { message },
       statusCode: status,
       success: false,

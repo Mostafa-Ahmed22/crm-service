@@ -2,6 +2,7 @@ import { Controller, Post, Body, Req, Get, Query, Param, UnauthorizedException }
 import { AuthService } from "./auth.service";
 import { Public } from "../decorators/public.decorator";
 import { LoginDto } from "./dtos/login.dto";
+import { ChangePasswordDto } from "./dtos/change-password.dto";
 
 @Controller("auth")
 export class AuthController {
@@ -15,5 +16,16 @@ export class AuthController {
       throw new UnauthorizedException('Invalid credentials');
     }
     return this.authService.login(user, req.lang);
-  } 
+  }
+
+  @Post("reset-password")
+  async resetPassword(@Body() body: {employee_id: string}) {    
+    return this.authService.resetPassword(body.employee_id);
+  }
+
+  @Post("change-password")
+  async changePassword(@Req() req, @Body() body: ChangePasswordDto) {    
+    return this.authService.changePassword(req.user.employee_id, body);
+  }
+
 }
