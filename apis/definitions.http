@@ -280,7 +280,7 @@ Authorization: {{authorization}}
 ########################### update or assign feature to module
 
 
-POST {{host}}/definitions/assign-features-to-module
+POST {{host}}/definitions/assign-privilege-to-menuItem
 Content-Type: application/json
 Authorization: {{authorization}}
 
@@ -511,7 +511,7 @@ Authorization: {{authorization}}
 
 ############################# create new department
 
-POST {{host}}/definitions/create-department
+POST {{host}}/definitions/department
 Content-Type: application/json
 Authorization: {{authorization}}
 
@@ -520,3 +520,48 @@ Authorization: {{authorization}}
   "ar_name": "الحسابات"
   //,"show_in_mobile": 1
 }
+
+
+############################# create service config
+
+POST {{host}}/definitions/service-config
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  //"technical_staff_count": 4, 
+  //"SLA": "60m",
+  //"delay": "60m",
+  //"is_active": 1,
+  //"project_id": 3
+}
+
+################## get service configs
+GET {{host}}/definitions/service-configs
+Content-Type: application/json
+Authorization: {{authorization}} 
+
+############################## create new service
+
+POST {{host}}/definitions/service
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "en_name": "deep cleaning",
+  "ar_name": "تنظيف عميق",
+  "description": "this is deep cleaning service",
+  "department_id": 1,
+  "service_config_id": 1,
+  "price": 0,
+  //"is_active": 1,
+  //"show_in_mobile": 1,
+  //"en_mobile_service_name": "deep cleaning",
+  //"ar_mobile_service_name": "تنظيف عميق",
+  //"start_date": "2023-01-01"
+}
+
+############################## get services
+GET {{host}}/definitions/services?page=1&limit=1
+Content-Type: application/json
+Authorization: {{authorization}}

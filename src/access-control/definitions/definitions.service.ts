@@ -5,7 +5,9 @@ import { CreateMenuItemsDto } from './dtos/create-menuItems.dto';
 import { CreatePrivilegeDto } from './dtos/create-privileges.dto';
 import { Prisma } from 'src/generated/postgres/prisma/client';
 import { CreateDepartmentDto } from './dtos/create-department.dto';
-import { isDeleteStatusEnums } from 'src/common/enums/shared.enum';
+import { isDeleteStatusEnums, superAdminEnums } from 'src/common/enums/shared.enum';
+import { CreateServiceConfigDto } from './dtos/create-service-config.dto';
+import { CreateServiceDto } from './dtos/create-service.dto';
 
 @Injectable()
 export class DefinitionsService {
@@ -190,4 +192,142 @@ export class DefinitionsService {
     }
   }
 
+  async createServiceConfig(user: { user_name: string, company_project_id: number, employee_id: string }, data: CreateServiceConfigDto) {
+
+    try {
+      if (!data.project_id) {
+        data.project_id = user.company_project_id;
+      }
+      return this.prisma.service_config.create({
+        data: { ...data, created_by: user.employee_id }
+      });
+
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        // Unique constraint violation
+        if (error.code === "P2002") {
+          throw new ConflictException(`Service config with name "${data}" already exists`);
+        }
+        // Foreign key constraint failed
+        if (error.code === "P2003") {
+          throw new BadRequestException("Invalid foreign key reference");
+        }
+      } else if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException("Invalid data provided");
+      }
+      throw new InternalServerErrorException("Failed to create service config");
+    }
+  }
+
+  async getServiceConfigs(language: 'en' | 'ar', user:any) {
+    const serviceConfigs = await this.prisma.service_config.findMany({
+      where: {
+        ...(user.role === superAdminEnums.ROLE_EN_NAME) ? {} : { project_id: user.company_project_id },
+        is_deleted: isDeleteStatusEnums.NOT_DELETED
+      },
+      include: {
+        company_project: {
+          select: {
+            [`${language}_name`]: true,
+          }
+        },
+        employees_service_config_created_byToemployees: {
+          select: {
+            full_name: true,
+          }
+        }
+      },
+      
+    });
+    return serviceConfigs.map((serviceConfig) => {
+      const { company_project, ...rest } = serviceConfig;
+      return {
+        ...rest,
+        project_name: company_project ? company_project[`${language}_name`] : null,
+      };
+    });
+      }
+  async createService(user: { user_name: string, company_project_id: number, employee_id: string }, data: CreateServiceDto) {
+    try {
+      let start_date: Date = new Date();
+      if (data.start_date) {
+        start_date = new Date(data.start_date); // Convert to YYYY-MM-DD format
+      }
+      return this.prisma.services.create({
+        data: { ...data, created_by: user.employee_id, start_date }
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        // Unique constraint violation
+        if (error.code === "P2002") {
+          throw new ConflictException(`Service config with name "${data}" already exists`);
+        }
+        // Foreign key constraint failed
+        if (error.code === "P2003") {
+          throw new BadRequestException("Invalid foreign key reference");
+        }
+      } else if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException("Invalid data provided");
+      }
+      throw new InternalServerErrorException("Failed to create service config");
+    }
+  }
+
+  async getServices(user: any, pagination: { page: number, limit: number, skip: number }, language: 'en' | 'ar') {
+    const services = await this.prisma.services.findMany({
+      where: {
+        is_deleted: isDeleteStatusEnums.NOT_DELETED,
+        departments: {
+          is_deleted: isDeleteStatusEnums.NOT_DELETED,
+        },
+        service_config: {
+          is_deleted: isDeleteStatusEnums.NOT_DELETED,
+          ...(user.role === superAdminEnums.ROLE_EN_NAME ? {} : { project_id: user.company_project_id })
+        }
+      },
+      skip: pagination.skip,
+      take: pagination.limit,
+      include: {
+        departments: {
+          select: {
+            [`${language}_name`]: true,
+          }
+        },
+        service_config: true,
+        employees_services_created_byToemployees: {
+          select: {
+            full_name: true,
+          }
+        }
+        
+      },
+    });
+
+    const totalCount = await this.prisma.services.count({
+      where: {
+        is_deleted: isDeleteStatusEnums.NOT_DELETED,
+        departments: {
+          is_deleted: isDeleteStatusEnums.NOT_DELETED,
+        },
+        service_config: {
+          is_deleted: isDeleteStatusEnums.NOT_DELETED,
+          ...(user.role === superAdminEnums.ROLE_EN_NAME ? {} : { project_id: user.company_project_id })
+        }
+      }
+    });
+    const formattedServices = services.map((service) => {
+      const { departments, service_config, en_name, ar_name,employees_services_created_byToemployees, ...rest } = service;
+      return {
+        ...rest,
+        department_name: departments ? departments[`${language}_name`] : null,
+        created_by_name: employees_services_created_byToemployees ? employees_services_created_byToemployees.full_name : null,
+        
+      };
+    });              
+    return {
+      totalCount,
+      totalPages: Math.ceil(totalCount / pagination.limit),
+      services: formattedServices
+    }
+  }
 }

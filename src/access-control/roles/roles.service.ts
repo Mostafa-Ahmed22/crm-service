@@ -121,7 +121,7 @@ export class RolesService {
         menuItems : {is_deleted: isDeleteStatusEnums.NOT_DELETED,
           menu: {is_deleted: isDeleteStatusEnums.NOT_DELETED}
         },
-       },
+      },
       include: {
         menuItems: { include: { menu: true } },
         privileges: true,
