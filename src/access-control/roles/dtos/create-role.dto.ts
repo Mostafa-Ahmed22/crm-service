@@ -11,4 +11,8 @@ export class CreateRoleDto {
   @IsOptional()
   company_project_id: number;
 
+  @IsNumber()
+  @IsOptional()
+  is_deleted: number;
+
 }

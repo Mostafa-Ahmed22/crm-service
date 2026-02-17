@@ -3,6 +3,7 @@ import { Prisma } from 'src/generated/postgres/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoleDto } from './dtos/create-role.dto';
 import { activeStatusEnums, isDeleteStatusEnums, superAdminEnums } from 'src/common/enums/shared.enum';
+import { UpdateRoleDto } from './dtos/update-role.dto';
 
 @Injectable()
 export class RolesService {
@@ -77,15 +78,37 @@ export class RolesService {
     };
   }
 
-  async assignPrivilegeToRole(data: { privileges: { role_id: string, menuItem_id: number, privilege_id: number, status: number }[] }) {
+  async updateRole(id: string, data: UpdateRoleDto) {
+    try {
+      const updatedRole = await this.prisma.roles.update({
+        where: { id },
+        data,
+      });
+      return { id: updatedRole.id, message: 'Role updated successfully' };
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new ConflictException(`Role with name "${data.en_name}" already exists`);
+        }
+        if (error.code === 'P2003') {
+          throw new BadRequestException('Invalid foreign key reference');
+        }
+      } else if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException('Invalid data provided');
+      }
+      throw new InternalServerErrorException('Failed to update role');
+    }
+  }
+
+  async assignPrivilegeToRole(data: { privileges: { role_id: string, menuitem_id: number, privilege_id: number, status: number }[] }) {    
     try {
       const results = await Promise.all(
         data.privileges.map((privilege) =>
           this.prisma.role_privileges.upsert({
             where: {
-              role_id_menuItem_id_privilege_id: {
+              role_id_menuitem_id_privilege_id: {
                 role_id: privilege.role_id,
-                menuItem_id: privilege.menuItem_id,
+                menuitem_id: privilege.menuitem_id,
                 privilege_id: privilege.privilege_id,
               },
             },
@@ -101,7 +124,6 @@ export class RolesService {
       return results;
 
     } catch (error) {
-      
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2003") {
           throw new BadRequestException("Invalid foreign key reference for role_id or menu_id");

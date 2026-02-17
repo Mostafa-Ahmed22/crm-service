@@ -5,9 +5,12 @@ import { CreateMenuItemsDto } from './dtos/create-menuItems.dto';
 import { CreatePrivilegeDto } from './dtos/create-privileges.dto';
 import { Prisma } from 'src/generated/postgres/prisma/client';
 import { CreateDepartmentDto } from './dtos/create-department.dto';
-import { isDeleteStatusEnums, superAdminEnums } from 'src/common/enums/shared.enum';
+import { activeStatusEnums, genderEnums, isDeleteStatusEnums, languageEnums, projectEnums, promiseStatusEnums, superAdminEnums } from 'src/common/enums/shared.enum';
 import { CreateServiceConfigDto } from './dtos/create-service-config.dto';
 import { CreateServiceDto } from './dtos/create-service.dto';
+import { CreateSafeDto } from './dtos/create-safe.dto';
+import { CreateUserTypesDto } from './dtos/create-user-types.dto';
+import { CreatePositionsDto } from './dtos/create-positions.dto';
 
 @Injectable()
 export class DefinitionsService {
@@ -62,6 +65,79 @@ export class DefinitionsService {
 
   }
 
+  async createSafe(data: CreateSafeDto, user: { user_name: string, company_project_id: number, employee_id: string }) {
+
+    try {
+      return this.prisma.safes.create({ data: { ...data, created_by: user.user_name } });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        // Unique constraint violation        
+        if (error.code === "P2002") {
+          throw new ConflictException(`Safe name "${data}" already exists`);
+        }
+        // Foreign key constraint failed
+        if (error.code === "P2003") {
+          throw new BadRequestException("Invalid foreign key reference");
+        }
+      } else if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException("Invalid data provided");
+      }
+
+      // Fallback for unexpected errors
+      throw new InternalServerErrorException("Failed to create Safe");
+    }
+  }
+
+  async createUserTypes(data: CreateUserTypesDto, user: { user_name: string, company_project_id: number, employee_id: string }) {
+
+    try {
+      return this.prisma.user_types.createMany({ data: data.userTypes.map(userType => ({ ...userType, created_by: user.user_name })) });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        // Unique constraint violation        
+        if (error.code === "P2002") {
+          throw new ConflictException(`User Type name "${data}" already exists`);
+        }
+        // Foreign key constraint failed
+        if (error.code === "P2003") {
+          throw new BadRequestException("Invalid foreign key reference");
+        }
+      } else if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException("Invalid data provided");
+      }
+
+      // Fallback for unexpected errors
+      throw new InternalServerErrorException("Failed to create User Type");
+    }
+  }
+
+  async createPositions(data: CreatePositionsDto, user: { role_name:string, user_name: string, company_project_id: number, employee_id: string }) {
+    
+    if (user.role_name == superAdminEnums.ROLE_EN_NAME && data.positions.some(position => !position.project_id)) {
+      throw new BadRequestException("Project ID is required for positions when the user is a super admin");
+    }
+    try {      
+      return this.prisma.positions.createMany({ data: data.positions.map(position => ({ ...position,
+        project_id: user.role_name == superAdminEnums.ROLE_EN_NAME ? position.project_id : user.company_project_id
+        ,created_by: user.user_name })) });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        // Unique constraint violation        
+        if (error.code === "P2002") {
+          throw new ConflictException(`Position name "${data}" already exists`);
+        }
+        // Foreign key constraint failed
+        if (error.code === "P2003") {
+          throw new BadRequestException("Invalid foreign key reference");
+        }
+      } else if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException("Invalid data provided");
+      }
+
+      // Fallback for unexpected errors
+      throw new InternalServerErrorException("Failed to create Position");
+    }
+  }
   async createMenuItems(data: CreateMenuItemsDto) {
     try {
       return await this.prisma.menuItems.createMany({ data: data.menuItems });
@@ -219,10 +295,10 @@ export class DefinitionsService {
     }
   }
 
-  async getServiceConfigs(language: 'en' | 'ar', user:any) {
+  async getServiceConfigs(language: 'en' | 'ar', user: any) {
     const serviceConfigs = await this.prisma.service_config.findMany({
       where: {
-        ...(user.role === superAdminEnums.ROLE_EN_NAME) ? {} : { project_id: user.company_project_id },
+        ...(user.role_name === superAdminEnums.ROLE_EN_NAME) ? {} : { project_id: user.company_project_id },
         is_deleted: isDeleteStatusEnums.NOT_DELETED
       },
       include: {
@@ -237,7 +313,7 @@ export class DefinitionsService {
           }
         }
       },
-      
+
     });
     return serviceConfigs.map((serviceConfig) => {
       const { company_project, ...rest } = serviceConfig;
@@ -246,13 +322,11 @@ export class DefinitionsService {
         project_name: company_project ? company_project[`${language}_name`] : null,
       };
     });
-      }
+  }
   async createService(user: { user_name: string, company_project_id: number, employee_id: string }, data: CreateServiceDto) {
     try {
-      let start_date: Date = new Date();
-      if (data.start_date) {
-        start_date = new Date(data.start_date); // Convert to YYYY-MM-DD format
-      }
+      const start_date: Date = data.start_date ? new Date(data.start_date) : new Date();
+
       return this.prisma.services.create({
         data: { ...data, created_by: user.employee_id, start_date }
       });
@@ -282,7 +356,7 @@ export class DefinitionsService {
         },
         service_config: {
           is_deleted: isDeleteStatusEnums.NOT_DELETED,
-          ...(user.role === superAdminEnums.ROLE_EN_NAME ? {} : { project_id: user.company_project_id })
+          ...(user.role_name === superAdminEnums.ROLE_EN_NAME ? {} : { project_id: user.company_project_id })
         }
       },
       skip: pagination.skip,
@@ -299,7 +373,7 @@ export class DefinitionsService {
             full_name: true,
           }
         }
-        
+
       },
     });
 
@@ -311,23 +385,67 @@ export class DefinitionsService {
         },
         service_config: {
           is_deleted: isDeleteStatusEnums.NOT_DELETED,
-          ...(user.role === superAdminEnums.ROLE_EN_NAME ? {} : { project_id: user.company_project_id })
+          ...(user.role_name === superAdminEnums.ROLE_EN_NAME ? {} : { project_id: user.company_project_id })
         }
       }
     });
     const formattedServices = services.map((service) => {
-      const { departments, service_config, en_name, ar_name,employees_services_created_byToemployees, ...rest } = service;
+      const { departments, service_config, en_name, ar_name, employees_services_created_byToemployees, ...rest } = service;
       return {
         ...rest,
         department_name: departments ? departments[`${language}_name`] : null,
         created_by_name: employees_services_created_byToemployees ? employees_services_created_byToemployees.full_name : null,
-        
+
       };
-    });              
+    });
     return {
       totalCount,
       totalPages: Math.ceil(totalCount / pagination.limit),
       services: formattedServices
     }
+  }
+
+  async getAllDropDowns(language: 'en' | 'ar', user: any) {
+    const [menuItems, privileges, departments, positions, safes, user_types] = await Promise.allSettled([
+      this.prisma.menuItems.findMany({
+        where: { is_deleted: isDeleteStatusEnums.NOT_DELETED }
+      }),
+      this.prisma.privileges.findMany({
+        where: { is_deleted: isDeleteStatusEnums.NOT_DELETED }
+      }),
+      this.prisma.departments.findMany({
+        where: { is_deleted: isDeleteStatusEnums.NOT_DELETED, project_id: user.company_project_id,
+          status: activeStatusEnums.ACTIVE
+         }
+      }),
+      this.prisma.positions.findMany({
+        where: { is_deleted: isDeleteStatusEnums.NOT_DELETED, project_id: user.company_project_id,
+          status: activeStatusEnums.ACTIVE
+         }
+      }),
+      this.prisma.safes.findMany({
+        where: { OR: [{ project_id: user.company_project_id }, { project_id: projectEnums.ALL_PROJECTS }] }
+      }),
+      this.prisma.user_types.findMany({
+        where: { project_id: projectEnums.ALL_PROJECTS }
+      })
+    ])
+    if (menuItems.status == promiseStatusEnums.REJECTED || privileges.status == promiseStatusEnums.REJECTED ||
+      departments.status == promiseStatusEnums.REJECTED || positions.status == promiseStatusEnums.REJECTED || safes.status == promiseStatusEnums.REJECTED ||
+      user_types.status == promiseStatusEnums.REJECTED) {
+      throw new InternalServerErrorException("Failed to fetch dropdown data");
+    }
+    return {
+      menuItems: menuItems.status === 'fulfilled' ? menuItems.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
+      privileges: privileges.status === 'fulfilled' ? privileges.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
+      departments: departments.status === 'fulfilled' ? departments.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
+      positions: positions.status === 'fulfilled' ? positions.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
+      safes: safes.status === 'fulfilled' ? safes.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
+      user_types: user_types.status === 'fulfilled' ? user_types.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
+      active_status: [{ id : activeStatusEnums.ACTIVE, name : language === languageEnums.ARABIC ? 'نشط' : 'Active' }, { id : activeStatusEnums.INACTIVE, name : language === languageEnums.ARABIC ? 'غير نشط' : 'Inactive' }],
+      delete_status: [{ id : isDeleteStatusEnums.NOT_DELETED, name : language === languageEnums.ARABIC ? 'غير محذوف' : 'Not Deleted' }, { id : isDeleteStatusEnums.DELETED, name : language === languageEnums.ARABIC ? 'محذوف' : 'Deleted' }],
+      language : [{ id : languageEnums.ENGLISH, name : 'English' }, { id : languageEnums.ARABIC, name : 'Arabic' }],
+      gender: [{ id : genderEnums.MALE, name : language === languageEnums.ARABIC ? 'ذكر' : 'Male' }, { id : genderEnums.FEMALE, name : language === languageEnums.ARABIC ? 'انثى' : 'Female' }],
+    };
   }
 }

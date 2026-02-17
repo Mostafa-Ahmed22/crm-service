@@ -1,16 +1,10 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, IsInt, Length } from 'class-validator';
 
-export class CreateEmployeeDto {
-  @IsEmail()
-  email: string;
+export class UpdateEmployeeDto {
 
   @IsString()
-  @IsNotEmpty()
-  user_name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  full_name: string;
+  @IsOptional()
+  full_name?: string;
 
   @IsOptional()
   @IsString()
@@ -18,7 +12,8 @@ export class CreateEmployeeDto {
   phone_number?: string;
 
   @IsInt()
-  is_male: number; // 1 or 0, depending on your convention
+  @IsOptional()
+  is_male?: number; // 1 or 0, depending on your convention
 
   @IsOptional()
   @IsUUID()
@@ -29,7 +24,8 @@ export class CreateEmployeeDto {
   department_id?: number;
 
   @IsInt()
-  position_id: number;
+  @IsOptional()
+  position_id?: number;
 
   @IsOptional()
   @IsInt()
@@ -38,6 +34,14 @@ export class CreateEmployeeDto {
   @IsOptional()
   @IsInt()
   user_type_id?: number;
+
+  @IsOptional()
+  @IsInt()
+  is_locked?: number;
+
+  @IsOptional()
+  @IsInt()
+  is_deleted?: number;
 
   @IsOptional()
   @IsString()

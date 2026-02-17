@@ -9,7 +9,8 @@ Content-Type: application/json
 
 {
   //"email": "superAdmin@Amer.com",
-  "email": "mostafa.ahmed@acapitalholding.com",
+  "email": "mostafa.ahmedd@acapitalholding.com",
+  //"password": "C72L0nes"
   "password": "mostafa@222"
 }
 
@@ -27,17 +28,21 @@ Authorization: {{authorization}}
   "email": "mostafa.ahmed@acapitalholding.com",
   "user_name": "mostafaAhmed",
   "full_name": "Mostafa Ahmed",
-  "phone_number": "0112428915",
+  "phone_number": "01550396165",
   "is_male": 1,
   "role_id": "d6ca8a44-a77b-49e0-a1ba-d5b25b72bb45",
   "department_id": 1,
-  "position_id": 1
+  "position_id": 1,
+  "safe_id": 1,
+  "manager_id": "daef4ddb-aa8a-4332-af1e-0f1c0a737f36",
+  "user_type_id": 1
 }
 
 
 #################### get all Employees
 
-GET {{host}}/employees?name=mostafa&page=1&limit=1
+GET {{host}}/employees
+# GET {{host}}/employees?page=1&limit=2
 # GET {{host}}/employees?name=mostafa
 Content-Type: application/json
 Authorization: {{authorization}}
@@ -45,4 +50,13 @@ lang:en
 
 {
 
+}
+
+##################### update Employee 
+POST {{host}}/employees/update/6882a430-6c5c-4802-844b-4a94675d2d8b
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "full_name": "Mohamed Emad"
 }

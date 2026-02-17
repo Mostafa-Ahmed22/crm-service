@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dtos/create-employee.dto';
+import { UpdateEmployeeDto } from './dtos/update-employee.dto';
 
 @Controller('employees')
 export class EmployeesController {
@@ -14,5 +15,10 @@ export class EmployeesController {
   @Get() 
   async getAllEmployees(@Req() req, @Query('name') filter: string) {
     return this.employeesService.getAllEmployees(req.lang, req.user, req.pagination, filter);
+  }
+
+  @Post("update/:id")
+  async updateEmployee(@Req() req, @Body() body: UpdateEmployeeDto, @Param('id') id: string) {
+    return this.employeesService.updateEmployee(req.user, body, id);
   }
 }

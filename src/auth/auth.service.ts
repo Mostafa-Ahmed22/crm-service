@@ -6,7 +6,7 @@ import { MailService } from "src/mail/mail.service";
 import { LoginDto } from "./dtos/login.dto";
 import { HelperService } from "src/helper/helper.service";
 import { Prisma } from "src/generated/postgres/prisma/client";
-import { mailerEnums } from "src/common/enums/shared.enum";
+import { isDeleteStatusEnums, mailerEnums } from "src/common/enums/shared.enum";
 import { ChangePasswordDto } from "./dtos/change-password.dto";
 @Injectable()
 export class AuthService {
@@ -25,6 +25,15 @@ export class AuthService {
     });
 
     if (!employee) return null;
+    
+    if (employee.roles?.is_deleted === isDeleteStatusEnums.DELETED) 
+      throw new BadRequestException('Your role has been deleted, please contact administrator');
+    
+    if (employee.is_deleted === isDeleteStatusEnums.DELETED) 
+      throw new BadRequestException('Your account has been deleted, please contact administrator');
+
+    if (employee.is_locked === isDeleteStatusEnums.DELETED) 
+      throw new BadRequestException('Your account has been locked, please contact administrator');
 
     const valid = await this.passwordService.verifyPassword(password, employee.password);
     if (!valid) return null;

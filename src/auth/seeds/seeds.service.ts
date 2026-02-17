@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import { PasswordService } from "../password.service";
-import { activeStatusEnums, isDeleteStatusEnums, superAdminEnums } from "src/common/enums/shared.enum";
+import { activeStatusEnums, isDeleteStatusEnums, safeEnums, superAdminEnums } from "src/common/enums/shared.enum";
 
 @Injectable()
 export class SeedService implements OnModuleInit {
@@ -58,6 +58,20 @@ export class SeedService implements OnModuleInit {
       },
     });
 
+    const adminSafe = await this.prisma.safes.upsert({
+      where: { 
+        project_id_en_name: {
+          project_id: companyProject.id, 
+          en_name: safeEnums.DEFAULT_SAFE_EN_NAME,
+        }
+      },
+      update: {},
+      create: {
+        en_name: safeEnums.DEFAULT_SAFE_EN_NAME,
+        ar_name: safeEnums.DEFAULT_SAFE_AR_NAME,
+        project_id: companyProject.id,
+      },
+    });
     // 5. Seed Super Admin employee
     const existingAdmin = await this.prisma.employees.findUnique({
       where: { email: superAdminEnums.EMAIL },
@@ -76,6 +90,7 @@ export class SeedService implements OnModuleInit {
           role_id: adminRole.id,
           department_id:adminDepartment.id,
           position_id: adminPosition.id,
+          safe_id: adminSafe.id,
         },
       });
       console.log("Super Admin seeded successfully");
