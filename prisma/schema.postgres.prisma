@@ -61,7 +61,10 @@ model employees {
   created_at                                          DateTime?        @default(now()) @db.Timestamp(6)
   updated_at                                          DateTime?        @default(now()) @db.Timestamp(6)
   last_login_date                                     DateTime?        @db.Timestamp(6)
+  manager_id                                          String?          @db.Uuid
   departments                                         departments?     @relation(fields: [department_id], references: [id], map: "fk_employees_department")
+  employees                                           employees?       @relation("employeesToemployees", fields: [manager_id], references: [id], map: "fk_employees_manager")
+  other_employees                                     employees[]      @relation("employeesToemployees")
   positions                                           positions        @relation(fields: [position_id], references: [id], onDelete: SetNull, map: "fk_employees_position")
   roles                                               roles?           @relation(fields: [role_id], references: [id], map: "fk_employees_role")
   safes                                               safes?           @relation(fields: [safe_id], references: [id], map: "fk_employees_safe")
@@ -139,16 +142,16 @@ model privileges {
 model role_privileges {
   id           Int        @id @default(autoincrement())
   role_id      String     @db.Uuid
-  menuItem_id  Int
+  menuitem_id  Int
   privilege_id Int
   status       Int?       @default(1)
   created_at   DateTime?  @default(now()) @db.Timestamp(6)
   updated_at   DateTime?  @default(now()) @db.Timestamp(6)
-  menuItems    menuItems  @relation(fields: [menuItem_id], references: [id], onDelete: SetNull, onUpdate: SetNull, map: "fk_feature_menuItem")
+  menuItems    menuItems  @relation(fields: [menuitem_id], references: [id], onDelete: SetNull, onUpdate: SetNull, map: "fk_feature_menuItem")
   privileges   privileges @relation(fields: [privilege_id], references: [id], onDelete: SetNull, map: "fk_features")
   roles        roles      @relation(fields: [role_id], references: [id], onDelete: SetNull, map: "fk_role")
 
-  @@unique([role_id, menuItem_id, privilege_id], map: "uq_role_privilege")
+  @@unique([role_id, menuitem_id, privilege_id], map: "uq_role_privilege")
 }
 
 model roles {
@@ -177,7 +180,9 @@ model safes {
   created_at      DateTime?       @default(now()) @db.Timestamp(6)
   updated_at      DateTime?       @default(now()) @db.Timestamp(6)
   employees       employees[]
-  company_project company_project @relation(fields: [project_id], references: [id], map: "fk_project_safe")
+  company_project company_project @relation(fields: [project_id], references: [id], onDelete: SetNull, map: "fk_project_safe")
+
+  @@unique([project_id, en_name], map: "unique_project_en_name")
 }
 
 model user_types {

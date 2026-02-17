@@ -9,7 +9,7 @@ Content-Type: application/json
 
 {
   //"email": "superAdmin@Amer.com",
-  "email": "mostafa.ahmed@acapitalholding.com",
+  "email": "mostafa.ahmedd@acapitalholding.com",
   //"password": "C72L0nes"
   "password": "mostafa@222"
 }
@@ -565,3 +565,51 @@ Authorization: {{authorization}}
 GET {{host}}/definitions/services?page=1&limit=1
 Content-Type: application/json
 Authorization: {{authorization}}
+
+############################## get all dropdown
+GET {{host}}/definitions/all-dropdowns
+Content-Type: application/json
+Authorization: {{authorization}}
+lang:en
+
+
+############################### create project safe
+POST {{host}}/definitions/safes
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "en_name": "porto matrouh safe",
+  "ar_name": "خزينة بورتو مطروح",
+  "project_id": 2
+}
+
+############################ create usertypes 
+POST {{host}}/definitions/user-types
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "userTypes": [
+    { "en_name": "Master Account", "ar_name": "حساب رئيسي", "project_id": 1 },
+    { "en_name": "HOD", "ar_name": "رئيس قسم", "project_id": 1 },
+    { "en_name": "Dispatcher", "ar_name": "الموزع", "project_id": 1 },
+    { "en_name": "Technician", "ar_name": "الفني", "project_id": 1 },
+    { "en_name": "Agent", "ar_name": "الوكيل", "project_id": 1 }
+  ]
+}
+
+############################# create positions
+POST {{host}}/definitions/positions
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "positions": [
+    { "en_name": "General Manager", "ar_name": "المدير العام", "project_id": 2 },
+    { "en_name": "HR Manager", "ar_name": "مدير الموارد البشرية", "project_id": 2 },
+    { "en_name": "Finance Manager", "ar_name": "مدير المالية", "project_id": 2 },
+    { "en_name": "Sales Manager", "ar_name": "مدير المبيعات", "project_id": 2 },
+    { "en_name": "IT Manager", "ar_name": "مدير تكنولوجيا المعلومات", "project_id": 2 }
+  ]
+}

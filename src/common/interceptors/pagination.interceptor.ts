@@ -10,6 +10,15 @@ export class PaginationInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
 
+    // Check if page and limit are provided
+    if (!request.query.page && !request.query.limit) {
+      request.pagination = {
+      page: undefined,
+      limit: undefined,
+      skip: undefined
+    }
+    return next.handle();
+    }
     // Parse and validate page
     let page = parseInt(request.query.page) || this.DEFAULT_PAGE;
     if (page < 1) {
