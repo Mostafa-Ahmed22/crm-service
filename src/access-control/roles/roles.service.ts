@@ -88,7 +88,7 @@ export class RolesService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new ConflictException(`Role with name "${data.en_name}" already exists`);
+          throw new ConflictException(`Role already exists`);
         }
         if (error.code === 'P2003') {
           throw new BadRequestException('Invalid foreign key reference');
