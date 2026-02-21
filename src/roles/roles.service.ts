@@ -184,7 +184,7 @@ export class RolesService {
         result[menuName].menuitems[menuItemName] = {
           id: privilege.menuitems.id,
           name: menuItemName,
-          screen: privilege.menuitems.screen,
+          href: privilege.menuitems.screen,
           privileges: [],
         };
       }
