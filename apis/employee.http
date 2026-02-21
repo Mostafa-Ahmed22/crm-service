@@ -35,7 +35,7 @@ Authorization: {{authorization}}
   "position_id": 1,
   "safe_id": 1,
   "manager_id": "daef4ddb-aa8a-4332-af1e-0f1c0a737f36",
-  "user_type_id": 1
+  "employee_type_id": 1
 }
 
 

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, IsInt, Length } from 'class-validator';
+import { IsOptional, IsString, IsUUID, IsInt, Length } from 'class-validator';
 
 export class UpdateEmployeeDto {
 
@@ -33,7 +33,7 @@ export class UpdateEmployeeDto {
 
   @IsOptional()
   @IsInt()
-  user_type_id?: number;
+  employee_type_id?: number;
 
   @IsOptional()
   @IsInt()

@@ -3,11 +3,12 @@ import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from '../prisma/prisma.service';
 import { PasswordService } from "./password.service";
 import { MailService } from "src/mail/mail.service";
-import { LoginDto } from "./dtos/login.dto";
 import { HelperService } from "src/helper/helper.service";
 import { Prisma } from "src/generated/postgres/prisma/client";
 import { isDeleteStatusEnums, mailerEnums } from "src/common/enums/shared.enum";
-import { ChangePasswordDto } from "./dtos/change-password.dto";
+import * as dtos from "./dtos/index.dtos";
+import type * as interfaces from 'src/common/interfaces/index.interfaces';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -17,16 +18,16 @@ export class AuthService {
     private readonly helperService: HelperService,
     private readonly mailerService: MailService
   ) { }
-  async validateEmployee(body: LoginDto) {
+  async validateEmployee(body: dtos.LoginDto) {
     const { email, password } = body;
     const employee = await this.prisma.employees.findUnique({
       where: { email },
-      include: { roles: { include: { company_project: true } } },
+      include: { roles_employees_role_idToroles: { include: { company_project: true } } },
     });
 
     if (!employee) return null;
     
-    if (employee.roles?.is_deleted === isDeleteStatusEnums.DELETED) 
+    if (employee.roles_employees_role_idToroles?.is_deleted === isDeleteStatusEnums.DELETED) 
       throw new BadRequestException('Your role has been deleted, please contact administrator');
     
     if (employee.is_deleted === isDeleteStatusEnums.DELETED) 
@@ -50,14 +51,15 @@ export class AuthService {
 
   async login(employee: any, language: 'en' | 'ar') {
     const payload = {
-      employee_id: employee.id, role_name: employee.roles.en_name, role_id: employee.roles.id, user_name: employee.user_name, employee_name: employee.full_name,
-      company_project_id: employee.roles.company_project_id, company_code: employee.roles.company_project.company_code,
-      project_code: employee.roles.company_project.project_code, project_name: employee.roles.company_project.en_name,
+      employee_id: employee.id, role_name: employee.roles_employees_role_idToroles.en_name, role_id: employee.roles_employees_role_idToroles.id, user_name: employee.user_name, employee_name: employee.full_name,
+      company_project_id: employee.roles_employees_role_idToroles.company_project_id, company_code: employee.roles_employees_role_idToroles.company_project.company_code,
+      project_code: employee.roles_employees_role_idToroles.company_project.project_code, project_name: employee.roles_employees_role_idToroles.company_project.en_name,
     };
     return { ...payload, access_token: this.jwtService.sign(payload) };
   }
 
-  async resetPassword(employee_id: string) {
+  async resetPassword(body: dtos.ResetPasswordDto) {
+    const { employee_id } = body;
     try {
       ;
       const existingEmployee = await this.prisma.employees.findFirst({
@@ -65,7 +67,7 @@ export class AuthService {
       });
       
       if (!existingEmployee) {
-        throw new ConflictException('Email or User Name is not exists');
+        throw new ConflictException('Email or User Name does not exist');
       }
 
       const password = this.helperService.generateRandomPass(8)
@@ -99,18 +101,18 @@ export class AuthService {
       throw new BadRequestException("Invalid data provided");
     }
     // Fallback for unexpected errors
-    throw new InternalServerErrorException("Failed to assign modules to role");
+    throw new BadRequestException("Failed to assign modules to role");
     }
   }
 
-  async changePassword(employee_id: string, changePasswordDto: ChangePasswordDto) {
+  async changePassword(user: interfaces.User, changePasswordDto: dtos.ChangePasswordDto) {
     const { oldPassword, newPassword, confirmPassword } = changePasswordDto;
     if (newPassword !== confirmPassword) {
       throw new BadRequestException('New password and confirm password do not match');
     }
     // const employee = this.prisma.employees.findUnique({ where: { id: user.employee_id } });
     const employee = await this.prisma.employees.findUnique({ where: { 
-      id: employee_id
+      id: user.employee_id
     } });
 
     if (!employee) {
@@ -125,7 +127,7 @@ export class AuthService {
     const hashed = await this.passwordService.hashPassword(newPassword);
     
     const updatedEmployee = await this.prisma.employees.update({
-      where: { id: employee_id },
+      where: { id: user.employee_id },
       data: { password: hashed }
     });
     if (!updatedEmployee) {

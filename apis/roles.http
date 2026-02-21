@@ -8,8 +8,9 @@ POST {{host}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "superAdmin@Amer.com",
-  //"email": "mostafa.ahmed@acapitalholding.com",
+  //"email": "superAdmin@Amer.com",
+  "email": "mostafa.ahmedd@acapitalholding.com",
+  //"password": "C72L0nes"
   "password": "mostafa@222"
 }
 

@@ -37,7 +37,7 @@ Content-Type: application/json
 Authorization: {{authorization}}
 
 {
-  "menuItems": [
+  "menuitems": [
     {"en_name": "Dashboard", "ar_name": "لوحة التحكم"},
     {"en_name": "PPM", "ar_name": "PPM"},
     {"en_name": "Definition", "ar_name": "التعريفات"},

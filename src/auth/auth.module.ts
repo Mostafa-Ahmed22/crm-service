@@ -3,7 +3,6 @@ import { JwtModule } from "@nestjs/jwt";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { JwtStrategy } from "./jwt.strategy";
-import { RolesGuard } from "./guards/roles.guard";
 import { PasswordService } from "./password.service";
 import * as fs from "fs";
 import { SeedService } from "src/auth/seeds/seeds.service";
@@ -18,7 +17,7 @@ import { SeedService } from "src/auth/seeds/seeds.service";
       }),
     }),
   ],
-  providers: [AuthService, JwtStrategy, RolesGuard, PasswordService, SeedService,
+  providers: [AuthService, JwtStrategy, PasswordService, SeedService,
   ],
   controllers: [AuthController],
   exports: [PasswordService]

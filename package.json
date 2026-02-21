@@ -14,6 +14,7 @@
     "start:prod": "node dist/main",
     "shell": "docker exec -it crm-service sh",
     "pull-postgres": "npx prisma db pull --config=prisma/postgres.config.ts; npx prisma generate --config=prisma/postgres.config.ts",
+    "pull": "npx prisma db pull --config=prisma/postgres.config.ts; npx prisma generate --config=prisma/postgres.config.ts",
     "force-pull-postgres": "npx prisma db pull --config=prisma/postgres.config.ts --force; npx prisma generate --config=prisma/postgres.config.ts",
     "generate-postgres": "npx prisma generate --config=prisma/postgres.config.ts",
     "push-postgres": "npx prisma db push --config=prisma/postgres.config.ts",
