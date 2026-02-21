@@ -7,8 +7,10 @@ import {
   ForbiddenException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { IS_PUBLIC_KEY } from "../../decorators/public.decorator";
-import { ROLES_KEY } from "../../decorators/roles.decorator";
+import { IS_PUBLIC_KEY } from "../../common/decorators/public.decorator";
+import { ROLES_KEY } from "../../common/decorators/roles.decorator";
+import type * as interfaces from 'src/common/interfaces/index.interfaces';
+
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -19,10 +21,11 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+
     if (isPublic) return true; // ✅ allow public endpoints
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const user: interfaces.User = request.user;
 
     // ✅ if not public and no token → throw Unauthorized
     if (!user) {

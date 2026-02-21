@@ -9,70 +9,257 @@ datasource db {
 }
 
 model company_project {
-  id             Int              @id @default(autoincrement())
-  company_code   String           @db.VarChar(10)
-  project_code   String           @db.VarChar(10)
-  ar_name        String           @db.VarChar(100)
-  en_name        String           @db.VarChar(100)
-  departments    departments[]
-  positions      positions[]
-  roles          roles[]
-  safes          safes[]
-  service_config service_config[]
-  user_types     user_types[]
+  id               Int                @id @default(autoincrement())
+  company_code     String             @db.VarChar(10)
+  project_code     String             @db.VarChar(10)
+  ar_name          String             @db.VarChar(100)
+  en_name          String             @db.VarChar(100)
+  created_at       DateTime?          @default(now()) @db.Timestamp(6)
+  updated_at       DateTime?          @db.Timestamp(6)
+  customers        customers[]
+  departments      departments[]
+  employee_types   employee_types[]
+  location_types   location_types[]
+  locations        locations[]
+  positions        positions[]
+  rental_companies rental_companies[]
+  roles            roles[]
+  safes            safes[]
+  service_config   service_config[]
+  unit_types       unit_types[]
+  units            units[]
 
   @@unique([company_code, project_code], map: "company_project_unique_pair")
 }
 
+model countries {
+  id                                        Int        @id(map: "country_pkey") @default(autoincrement())
+  en_name                                   String     @db.VarChar(100)
+  ar_name                                   String     @db.VarChar(100)
+  en_nationality                            String     @db.VarChar(100)
+  ar_nationality                            String     @db.VarChar(100)
+  country_code                              String     @db.VarChar(50)
+  phone_code                                String     @db.VarChar(50)
+  created_by                                String?    @db.Uuid
+  updated_by                                String?    @db.Uuid
+  created_at                                DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at                                DateTime?  @default(now()) @db.Timestamp(6)
+  employees_countries_created_byToemployees employees? @relation("countries_created_byToemployees", fields: [created_by], references: [id], map: "fk_country_created_by")
+  employees_countries_updated_byToemployees employees? @relation("countries_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_country_updated_by")
+}
+
+model customer_types {
+  id                                             Int         @id @default(autoincrement())
+  en_name                                        String      @db.VarChar(50)
+  ar_name                                        String?     @db.VarChar(50)
+  created_by                                     String?     @db.Uuid
+  updated_by                                     String?     @db.Uuid
+  created_at                                     DateTime?   @default(now()) @db.Timestamp(6)
+  updated_at                                     DateTime?   @db.Timestamp(6)
+  employees_customer_types_created_byToemployees employees?  @relation("customer_types_created_byToemployees", fields: [created_by], references: [id], map: "fk_marital_status_created_by")
+  employees_customer_types_updated_byToemployees employees?  @relation("customer_types_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_marital_status_updated_by")
+  customers                                      customers[]
+}
+
+model customers {
+  id                                        Int              @id @default(autoincrement())
+  customer_name                             String           @db.VarChar(255)
+  country_id                                Int
+  id_type                                   Int
+  id_number                                 String           @db.VarChar(50)
+  mobile_number                             String?          @db.VarChar(15)
+  telephone_number                          String?          @db.VarChar(15)
+  address_one                               String?
+  address_two                               String?
+  city                                      String?          @db.VarChar(255)
+  marital_status_id                         Int
+  religion_id                               Int
+  email                                     String?          @db.VarChar(255)
+  emergency_contact                         String?          @db.VarChar(255)
+  emergency_contact_relation                String?          @db.VarChar(255)
+  emergency_contact_phone_number            String?          @db.VarChar(15)
+  customer_type_id                          Int
+  project_id                                Int
+  notes                                     String?
+  is_active                                 Int?             @default(1)
+  is_deleted                                Int?             @default(0)
+  sap_customer_id                           String           @db.VarChar(20)
+  birth_date                                DateTime?        @db.Date
+  created_by                                String?          @db.Uuid
+  updated_by                                String?          @db.Uuid
+  created_at                                DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at                                DateTime?        @default(now()) @db.Timestamp(6)
+  marital_statuses                          marital_statuses @relation(fields: [marital_status_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_customer_marital_status")
+  religions                                 religions        @relation(fields: [religion_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_customer_religion")
+  customer_types                            customer_types   @relation(fields: [customer_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_customer_type")
+  employees_customers_created_byToemployees employees?       @relation("customers_created_byToemployees", fields: [created_by], references: [id], map: "fk_customers_created_by")
+  company_project                           company_project  @relation(fields: [project_id], references: [id], onDelete: SetNull, map: "fk_customers_project")
+  employees_customers_updated_byToemployees employees?       @relation("customers_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_customers_updated_by")
+
+  @@unique([sap_customer_id, project_id, is_deleted], map: "customer_unique_pair_project")
+}
+
 model departments {
-  id              Int             @id @default(autoincrement())
-  en_name         String          @db.VarChar(100)
-  ar_name         String          @db.VarChar(100)
-  created_by      String?         @db.VarChar(255)
-  updated_by      String?         @db.VarChar(255)
-  project_id      Int
-  show_in_mobile  Int?            @default(1)
-  status          Int?            @default(1)
-  created_at      DateTime?       @default(now()) @db.Timestamp(6)
-  updated_at      DateTime?       @default(now()) @db.Timestamp(6)
-  is_deleted      Int             @default(0)
-  company_project company_project @relation(fields: [project_id], references: [id], onDelete: SetNull, map: "fk_project_department")
-  employees       employees[]
-  services        services[]
+  id                                             Int             @id @default(autoincrement())
+  en_name                                        String          @db.VarChar(100)
+  ar_name                                        String          @db.VarChar(100)
+  created_by                                     String?         @db.Uuid
+  updated_by                                     String?         @db.Uuid
+  project_id                                     Int
+  show_in_mobile                                 Int?            @default(1)
+  status                                         Int?            @default(1)
+  created_at                                     DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at                                     DateTime?       @default(now()) @db.Timestamp(6)
+  is_deleted                                     Int             @default(0)
+  employees_departments_created_byToemployees    employees?      @relation("departments_created_byToemployees", fields: [created_by], references: [id], map: "fk_departments_created_by")
+  employees_departments_updated_byToemployees    employees?      @relation("departments_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_departments_updated_by")
+  company_project                                company_project @relation(fields: [project_id], references: [id], onDelete: SetNull, map: "fk_project_department")
+  employees_employees_department_idTodepartments employees[]     @relation("employees_department_idTodepartments")
+  services                                       services[]
 
   @@unique([project_id, en_name, is_deleted], map: "project_unique_pair")
 }
 
+model employee_types {
+  id                                                   Int             @id(map: "user_types_pkey") @default(autoincrement())
+  en_name                                              String          @db.VarChar(100)
+  ar_name                                              String?         @db.VarChar(100)
+  created_by                                           String?         @db.Uuid
+  updated_by                                           String?         @db.Uuid
+  project_id                                           Int
+  created_at                                           DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at                                           DateTime?       @default(now()) @db.Timestamp(6)
+  company_project                                      company_project @relation(fields: [project_id], references: [id], map: "fk_project_usertypes")
+  employees_employee_types_created_byToemployees       employees?      @relation("employee_types_created_byToemployees", fields: [created_by], references: [id], map: "fk_user_types_created_by")
+  employees_employee_types_updated_byToemployees       employees?      @relation("employee_types_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_user_types_updated_by")
+  employees_employees_employee_type_idToemployee_types employees[]     @relation("employees_employee_type_idToemployee_types")
+}
+
 model employees {
-  id                                                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email                                               String?          @unique @db.VarChar(255)
-  user_name                                           String           @unique(map: "employees_name_key") @db.VarChar(255)
-  full_name                                           String           @db.VarChar(255)
-  phone_number                                        String?          @unique(map: "employees_phone_unique") @db.VarChar(12)
-  is_male                                             Int
-  is_locked                                           Int?             @default(0)
-  is_deleted                                          Int?             @default(0)
-  password                                            String           @db.VarChar(255)
-  role_id                                             String?          @db.Uuid
-  department_id                                       Int?
-  position_id                                         Int
-  safe_id                                             Int?
-  user_type_id                                        Int?
-  created_at                                          DateTime?        @default(now()) @db.Timestamp(6)
-  updated_at                                          DateTime?        @default(now()) @db.Timestamp(6)
-  last_login_date                                     DateTime?        @db.Timestamp(6)
-  manager_id                                          String?          @db.Uuid
-  departments                                         departments?     @relation(fields: [department_id], references: [id], map: "fk_employees_department")
-  employees                                           employees?       @relation("employeesToemployees", fields: [manager_id], references: [id], map: "fk_employees_manager")
-  other_employees                                     employees[]      @relation("employeesToemployees")
-  positions                                           positions        @relation(fields: [position_id], references: [id], onDelete: SetNull, map: "fk_employees_position")
-  roles                                               roles?           @relation(fields: [role_id], references: [id], map: "fk_employees_role")
-  safes                                               safes?           @relation(fields: [safe_id], references: [id], map: "fk_employees_safe")
-  user_types                                          user_types?      @relation(fields: [user_type_id], references: [id], map: "fk_employees_usertypes")
-  service_config_service_config_created_byToemployees service_config[] @relation("service_config_created_byToemployees")
-  service_config_service_config_updated_byToemployees service_config[] @relation("service_config_updated_byToemployees")
-  services_services_created_byToemployees             services[]       @relation("services_created_byToemployees")
-  services_services_updated_byToemployees             services[]       @relation("services_updated_byToemployees")
+  id                                                        String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                                                     String?            @unique @db.VarChar(255)
+  user_name                                                 String             @unique(map: "employees_name_key") @db.VarChar(255)
+  full_name                                                 String             @db.VarChar(255)
+  phone_number                                              String?            @unique(map: "employees_phone_unique") @db.VarChar(12)
+  is_male                                                   Int
+  is_locked                                                 Int?               @default(0)
+  is_deleted                                                Int?               @default(0)
+  password                                                  String             @db.VarChar(255)
+  role_id                                                   String?            @db.Uuid
+  department_id                                             Int?
+  position_id                                               Int
+  safe_id                                                   Int?
+  employee_type_id                                          Int?
+  created_at                                                DateTime?          @default(now()) @db.Timestamp(6)
+  updated_at                                                DateTime?          @default(now()) @db.Timestamp(6)
+  last_login_date                                           DateTime?          @db.Timestamp(6)
+  manager_id                                                String?            @db.Uuid
+  countries_countries_created_byToemployees                 countries[]        @relation("countries_created_byToemployees")
+  countries_countries_updated_byToemployees                 countries[]        @relation("countries_updated_byToemployees")
+  customer_types_customer_types_created_byToemployees       customer_types[]   @relation("customer_types_created_byToemployees")
+  customer_types_customer_types_updated_byToemployees       customer_types[]   @relation("customer_types_updated_byToemployees")
+  customers_customers_created_byToemployees                 customers[]        @relation("customers_created_byToemployees")
+  customers_customers_updated_byToemployees                 customers[]        @relation("customers_updated_byToemployees")
+  departments_departments_created_byToemployees             departments[]      @relation("departments_created_byToemployees")
+  departments_departments_updated_byToemployees             departments[]      @relation("departments_updated_byToemployees")
+  employee_types_employee_types_created_byToemployees       employee_types[]   @relation("employee_types_created_byToemployees")
+  employee_types_employee_types_updated_byToemployees       employee_types[]   @relation("employee_types_updated_byToemployees")
+  departments_employees_department_idTodepartments          departments?       @relation("employees_department_idTodepartments", fields: [department_id], references: [id], map: "fk_employees_department")
+  employees                                                 employees?         @relation("employeesToemployees", fields: [manager_id], references: [id], map: "fk_employees_manager")
+  other_employees                                           employees[]        @relation("employeesToemployees")
+  positions_employees_position_idTopositions                positions          @relation("employees_position_idTopositions", fields: [position_id], references: [id], onDelete: SetNull, map: "fk_employees_position")
+  roles_employees_role_idToroles                            roles?             @relation("employees_role_idToroles", fields: [role_id], references: [id], map: "fk_employees_role")
+  safes_employees_safe_idTosafes                            safes?             @relation("employees_safe_idTosafes", fields: [safe_id], references: [id], map: "fk_employees_safe")
+  employee_types_employees_employee_type_idToemployee_types employee_types?    @relation("employees_employee_type_idToemployee_types", fields: [employee_type_id], references: [id], map: "fk_employees_usertypes")
+  id_types_id_types_created_byToemployees                   id_types[]         @relation("id_types_created_byToemployees")
+  id_types_id_types_updated_byToemployees                   id_types[]         @relation("id_types_updated_byToemployees")
+  location_types_location_types_created_byToemployees       location_types[]   @relation("location_types_created_byToemployees")
+  location_types_location_types_updated_byToemployees       location_types[]   @relation("location_types_updated_byToemployees")
+  locations_locations_created_byToemployees                 locations[]        @relation("locations_created_byToemployees")
+  locations_locations_updated_byToemployees                 locations[]        @relation("locations_updated_byToemployees")
+  marital_statuses_marital_statuses_created_byToemployees   marital_statuses[] @relation("marital_statuses_created_byToemployees")
+  marital_statuses_marital_statuses_updated_byToemployees   marital_statuses[] @relation("marital_statuses_updated_byToemployees")
+  positions_positions_created_byToemployees                 positions[]        @relation("positions_created_byToemployees")
+  positions_positions_updated_byToemployees                 positions[]        @relation("positions_updated_byToemployees")
+  religions_religions_created_byToemployees                 religions[]        @relation("religions_created_byToemployees")
+  religions_religions_updated_byToemployees                 religions[]        @relation("religions_updated_byToemployees")
+  rental_companies_rental_companies_created_byToemployees   rental_companies[] @relation("rental_companies_created_byToemployees")
+  rental_companies_rental_companies_updated_byToemployees   rental_companies[] @relation("rental_companies_updated_byToemployees")
+  roles_roles_created_byToemployees                         roles[]            @relation("roles_created_byToemployees")
+  roles_roles_updated_byToemployees                         roles[]            @relation("roles_updated_byToemployees")
+  safes_safes_created_byToemployees                         safes[]            @relation("safes_created_byToemployees")
+  safes_safes_updated_byToemployees                         safes[]            @relation("safes_updated_byToemployees")
+  service_config_service_config_created_byToemployees       service_config[]   @relation("service_config_created_byToemployees")
+  service_config_service_config_updated_byToemployees       service_config[]   @relation("service_config_updated_byToemployees")
+  services_services_created_byToemployees                   services[]         @relation("services_created_byToemployees")
+  services_services_updated_byToemployees                   services[]         @relation("services_updated_byToemployees")
+  unit_types_unit_types_created_byToemployees               unit_types[]       @relation("unit_types_created_byToemployees")
+  unit_types_unit_types_updated_byToemployees               unit_types[]       @relation("unit_types_updated_byToemployees")
+  units_units_created_byToemployees                         units[]            @relation("units_created_byToemployees")
+  units_units_locked_byToemployees                          units[]            @relation("units_locked_byToemployees")
+  units_units_unlocked_byToemployees                        units[]            @relation("units_unlocked_byToemployees")
+  units_units_updated_byToemployees                         units[]            @relation("units_updated_byToemployees")
+}
+
+model id_types {
+  id                                       Int        @id(map: "customer_id_type_pkey") @default(autoincrement())
+  en_name                                  String     @db.VarChar(100)
+  ar_name                                  String?    @db.VarChar(100)
+  created_by                               String?    @db.Uuid
+  updated_by                               String?    @db.Uuid
+  created_at                               DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at                               DateTime?  @default(now()) @db.Timestamp(6)
+  employees_id_types_created_byToemployees employees? @relation("id_types_created_byToemployees", fields: [created_by], references: [id], map: "fk_id_type_created_by")
+  employees_id_types_updated_byToemployees employees? @relation("id_types_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_id_type_updated_by")
+}
+
+model location_types {
+  id                                             Int             @id @default(autoincrement())
+  en_name                                        String          @db.VarChar(100)
+  ar_name                                        String?         @db.VarChar(100)
+  created_by                                     String?         @db.Uuid
+  updated_by                                     String?         @db.Uuid
+  project_id                                     Int
+  created_at                                     DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at                                     DateTime?       @default(now()) @db.Timestamp(6)
+  employees_location_types_created_byToemployees employees?      @relation("location_types_created_byToemployees", fields: [created_by], references: [id], map: "fk_location_types_created_by")
+  employees_location_types_updated_byToemployees employees?      @relation("location_types_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_location_types_updated_by")
+  company_project                                company_project @relation(fields: [project_id], references: [id], map: "fk_project_locationtypes")
+  locations                                      locations[]
+}
+
+model locations {
+  id                                        Int                   @id @default(autoincrement())
+  en_name                                   String                @db.VarChar(100)
+  ar_name                                   String?               @db.VarChar(100)
+  project_id                                Int
+  parent_location_id                        Int?
+  location_type_id                          Int
+  location_code                             String?               @db.VarChar(100)
+  created_by                                String?               @db.Uuid
+  updated_by                                String?               @db.Uuid
+  created_at                                DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at                                DateTime?             @default(now()) @db.Timestamp(6)
+  employees_locations_created_byToemployees employees?            @relation("locations_created_byToemployees", fields: [created_by], references: [id], map: "fk_location_created_by")
+  location_types                            location_types        @relation(fields: [location_type_id], references: [id], onDelete: SetNull, map: "fk_location_types")
+  employees_locations_updated_byToemployees employees?            @relation("locations_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_location_updated_by")
+  locations                                 locations?            @relation("locationsTolocations", fields: [parent_location_id], references: [id], map: "fk_parent_location")
+  other_locations                           locations[]           @relation("locationsTolocations")
+  company_project                           company_project       @relation(fields: [project_id], references: [id], map: "fk_project_locations")
+  unit_specifications                       unit_specifications[]
+}
+
+model marital_statuses {
+  id                                               Int         @id(map: "marital_status_pkey") @default(autoincrement())
+  en_name                                          String      @db.VarChar(100)
+  ar_name                                          String?     @db.VarChar(100)
+  created_by                                       String?     @db.Uuid
+  updated_by                                       String?     @db.Uuid
+  created_at                                       DateTime?   @default(now()) @db.Timestamp(6)
+  updated_at                                       DateTime?   @default(now()) @db.Timestamp(6)
+  customers                                        customers[]
+  employees_marital_statuses_created_byToemployees employees?  @relation("marital_statuses_created_byToemployees", fields: [created_by], references: [id], map: "fk_marital_status_created_by")
+  employees_marital_statuses_updated_byToemployees employees?  @relation("marital_statuses_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_marital_status_updated_by")
 }
 
 model menu {
@@ -82,23 +269,23 @@ model menu {
   created_at DateTime?   @default(now()) @db.Timestamp(6)
   updated_at DateTime?   @default(now()) @db.Timestamp(6)
   is_deleted Int         @default(0)
-  menuItems  menuItems[]
+  menuitems  menuitems[]
 }
 
-model menuItem_privileges {
-  id           Int        @id @default(autoincrement())
-  menuItem_id  Int
+model menuitem_privileges {
+  id           Int        @id(map: "menuItem_privileges_pkey") @default(autoincrement())
+  menuitem_id  Int
   privilege_id Int
   status       Int?       @default(1)
   created_at   DateTime?  @default(now()) @db.Timestamp(6)
   updated_at   DateTime?  @default(now()) @db.Timestamp(6)
   privileges   privileges @relation(fields: [privilege_id], references: [id], onDelete: Cascade, map: "fk__privileges")
-  menuItems    menuItems  @relation(fields: [menuItem_id], references: [id], onDelete: SetNull, map: "fk_menuItem")
+  menuitems    menuitems  @relation(fields: [menuitem_id], references: [id], onDelete: SetNull, map: "fk_menuItem")
 
-  @@unique([menuItem_id, privilege_id], map: "uq_module_feature")
+  @@unique([menuitem_id, privilege_id], map: "uq_module_feature")
 }
 
-model menuItems {
+model menuitems {
   id                  Int                   @id(map: "modules_pkey") @default(autoincrement())
   ar_name             String                @db.VarChar(100)
   en_name             String                @db.VarChar(100)
@@ -106,24 +293,29 @@ model menuItems {
   created_at          DateTime?             @default(now()) @db.Timestamp(6)
   updated_at          DateTime?             @default(now()) @db.Timestamp(6)
   is_deleted          Int                   @default(0)
-  menuItem_privileges menuItem_privileges[]
+  screen              String?               @db.VarChar(100)
+  menuitem_privileges menuitem_privileges[]
   menu                menu                  @relation(fields: [menu_id], references: [id], onDelete: SetNull, map: "fk_module_menu")
   role_privileges     role_privileges[]
+
+  @@unique([menu_id, screen, is_deleted], map: "menuitems_unique_triplet")
 }
 
 model positions {
-  id              Int             @id @default(autoincrement())
-  en_name         String          @db.VarChar(100)
-  ar_name         String          @db.VarChar(100)
-  created_by      String?         @db.VarChar(255)
-  updated_by      String?         @db.VarChar(255)
-  project_id      Int
-  status          Int?            @default(1)
-  created_at      DateTime?       @default(now()) @db.Timestamp(6)
-  updated_at      DateTime?       @default(now()) @db.Timestamp(6)
-  is_deleted      Int             @default(0)
-  employees       employees[]
-  company_project company_project @relation(fields: [project_id], references: [id], map: "fk_project_position")
+  id                                         Int             @id @default(autoincrement())
+  en_name                                    String          @db.VarChar(100)
+  ar_name                                    String          @db.VarChar(100)
+  created_by                                 String?         @db.Uuid
+  updated_by                                 String?         @db.Uuid
+  project_id                                 Int
+  status                                     Int?            @default(1)
+  created_at                                 DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at                                 DateTime?       @default(now()) @db.Timestamp(6)
+  is_deleted                                 Int             @default(0)
+  employees_employees_position_idTopositions employees[]     @relation("employees_position_idTopositions")
+  employees_positions_created_byToemployees  employees?      @relation("positions_created_byToemployees", fields: [created_by], references: [id], map: "fk_positions_created_by")
+  employees_positions_updated_byToemployees  employees?      @relation("positions_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_positions_updated_by")
+  company_project                            company_project @relation(fields: [project_id], references: [id], map: "fk_project_position")
 
   @@unique([project_id, en_name, is_deleted], map: "project_unique_pair_position")
 }
@@ -135,8 +327,36 @@ model privileges {
   created_at          DateTime?             @default(now()) @db.Timestamp(6)
   updated_at          DateTime?             @default(now()) @db.Timestamp(6)
   is_deleted          Int                   @default(0)
-  menuItem_privileges menuItem_privileges[]
+  menuitem_privileges menuitem_privileges[]
   role_privileges     role_privileges[]
+}
+
+model religions {
+  id                                        Int         @id(map: "religion_pkey") @default(autoincrement())
+  en_name                                   String      @db.VarChar(100)
+  ar_name                                   String?     @db.VarChar(100)
+  created_by                                String?     @db.Uuid
+  updated_by                                String?     @db.Uuid
+  created_at                                DateTime?   @default(now()) @db.Timestamp(6)
+  updated_at                                DateTime?   @default(now()) @db.Timestamp(6)
+  customers                                 customers[]
+  employees_religions_created_byToemployees employees?  @relation("religions_created_byToemployees", fields: [created_by], references: [id], map: "fk_religion_created_by")
+  employees_religions_updated_byToemployees employees?  @relation("religions_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_religion_updated_by")
+}
+
+model rental_companies {
+  id                                               Int             @id @default(autoincrement())
+  en_name                                          String          @db.VarChar(100)
+  ar_name                                          String?         @db.VarChar(100)
+  created_by                                       String?         @db.Uuid
+  updated_by                                       String?         @db.Uuid
+  project_id                                       Int
+  created_at                                       DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at                                       DateTime?       @default(now()) @db.Timestamp(6)
+  rental_company_code                              String          @db.VarChar(50)
+  company_project                                  company_project @relation(fields: [project_id], references: [id], map: "fk_project_rental_company")
+  employees_rental_companies_created_byToemployees employees?      @relation("rental_companies_created_byToemployees", fields: [created_by], references: [id], map: "fk_rental_company_created_by")
+  employees_rental_companies_updated_byToemployees employees?      @relation("rental_companies_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_rental_company_updated_by")
 }
 
 model role_privileges {
@@ -147,7 +367,7 @@ model role_privileges {
   status       Int?       @default(1)
   created_at   DateTime?  @default(now()) @db.Timestamp(6)
   updated_at   DateTime?  @default(now()) @db.Timestamp(6)
-  menuItems    menuItems  @relation(fields: [menuitem_id], references: [id], onDelete: SetNull, onUpdate: SetNull, map: "fk_feature_menuItem")
+  menuitems    menuitems  @relation(fields: [menuitem_id], references: [id], onDelete: SetNull, onUpdate: SetNull, map: "fk_feature_menuitem")
   privileges   privileges @relation(fields: [privilege_id], references: [id], onDelete: SetNull, map: "fk_features")
   roles        roles      @relation(fields: [role_id], references: [id], onDelete: SetNull, map: "fk_role")
 
@@ -155,47 +375,39 @@ model role_privileges {
 }
 
 model roles {
-  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  en_name            String            @db.VarChar(100)
-  ar_name            String            @db.VarChar(100)
-  company_project_id Int
-  created_at         DateTime?         @default(now()) @db.Timestamp(6)
-  updated_at         DateTime?         @default(now()) @db.Timestamp(6)
-  is_deleted         Int               @default(0)
-  created_by         String?           @db.VarChar(255)
-  employees          employees[]
-  role_privileges    role_privileges[]
-  company_project    company_project   @relation(fields: [company_project_id], references: [id], onDelete: SetNull, map: "fk_roles_company_project")
+  id                                    String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  en_name                               String            @db.VarChar(100)
+  ar_name                               String            @db.VarChar(100)
+  company_project_id                    Int
+  created_at                            DateTime?         @default(now()) @db.Timestamp(6)
+  updated_at                            DateTime?         @default(now()) @db.Timestamp(6)
+  is_deleted                            Int               @default(0)
+  created_by                            String?           @db.Uuid
+  updated_by                            String?           @db.Uuid
+  employees_employees_role_idToroles    employees[]       @relation("employees_role_idToroles")
+  role_privileges                       role_privileges[]
+  company_project                       company_project   @relation(fields: [company_project_id], references: [id], onDelete: SetNull, map: "fk_roles_company_project")
+  employees_roles_created_byToemployees employees?        @relation("roles_created_byToemployees", fields: [created_by], references: [id], map: "fk_roles_created_by")
+  employees_roles_updated_byToemployees employees?        @relation("roles_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_roles_updated_by")
 
   @@unique([en_name, company_project_id, is_deleted])
 }
 
 model safes {
-  id              Int             @id @default(autoincrement())
-  en_name         String?         @db.VarChar(100)
-  ar_name         String          @db.VarChar(100)
-  created_by      String?         @db.VarChar(255)
-  updated_by      String?         @db.VarChar(255)
-  project_id      Int
-  created_at      DateTime?       @default(now()) @db.Timestamp(6)
-  updated_at      DateTime?       @default(now()) @db.Timestamp(6)
-  employees       employees[]
-  company_project company_project @relation(fields: [project_id], references: [id], onDelete: SetNull, map: "fk_project_safe")
+  id                                    Int             @id @default(autoincrement())
+  en_name                               String?         @db.VarChar(100)
+  ar_name                               String          @db.VarChar(100)
+  created_by                            String?         @db.Uuid
+  updated_by                            String?         @db.Uuid
+  project_id                            Int
+  created_at                            DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at                            DateTime?       @default(now()) @db.Timestamp(6)
+  employees_employees_safe_idTosafes    employees[]     @relation("employees_safe_idTosafes")
+  company_project                       company_project @relation(fields: [project_id], references: [id], onDelete: SetNull, map: "fk_project_safe")
+  employees_safes_created_byToemployees employees?      @relation("safes_created_byToemployees", fields: [created_by], references: [id], map: "fk_safes_created_by")
+  employees_safes_updated_byToemployees employees?      @relation("safes_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_safes_updated_by")
 
   @@unique([project_id, en_name], map: "unique_project_en_name")
-}
-
-model user_types {
-  id              Int             @id @default(autoincrement())
-  en_name         String          @db.VarChar(100)
-  ar_name         String?         @db.VarChar(100)
-  created_by      String?         @db.VarChar(255)
-  updated_by      String?         @db.VarChar(255)
-  project_id      Int
-  created_at      DateTime?       @default(now()) @db.Timestamp(6)
-  updated_at      DateTime?       @default(now()) @db.Timestamp(6)
-  employees       employees[]
-  company_project company_project @relation(fields: [project_id], references: [id], map: "fk_project_usertypes")
 }
 
 model service_config {
@@ -242,4 +454,66 @@ model services {
   employees_services_updated_byToemployees employees?      @relation("services_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_updated_by_user")
 
   @@unique([en_name, ar_name, department_id, service_config_id, is_deleted], map: "service_unique_pair_service_config")
+}
+
+model unit_specifications {
+  id             Int        @id @default(autoincrement())
+  unit_type_id   Int
+  location_id    Int
+  address        String?
+  total_area     Decimal    @db.Decimal
+  floor          Int?
+  room_no        Int?
+  path_room_no   Int?
+  living_room_no Int?
+  balcony_no     Int?
+  created_at     DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?  @db.Timestamp(6)
+  is_furnished   Int
+  locations      locations  @relation(fields: [location_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_specifications_locations")
+  unit_types     unit_types @relation(fields: [unit_type_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_unit_types_specifications")
+  units          units?
+}
+
+model unit_types {
+  id                                         Int                   @id @default(autoincrement())
+  en_name                                    String                @db.VarChar(100)
+  ar_name                                    String?               @db.VarChar(100)
+  created_by                                 String?               @db.Uuid
+  updated_by                                 String?               @db.Uuid
+  project_id                                 Int
+  created_at                                 DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at                                 DateTime?             @default(now()) @db.Timestamp(6)
+  unit_specifications                        unit_specifications[]
+  company_project                            company_project       @relation(fields: [project_id], references: [id], map: "fk_project_unittypes")
+  employees_unit_types_created_byToemployees employees?            @relation("unit_types_created_byToemployees", fields: [created_by], references: [id], map: "fk_unit_types_created_by")
+  employees_unit_types_updated_byToemployees employees?            @relation("unit_types_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_unit_types_updated_by")
+}
+
+model units {
+  id                                     Int                 @id @default(autoincrement())
+  unit_number                            String              @db.VarChar(255)
+  project_id                             Int
+  unit_specification_id                  Int                 @unique(map: "unique_units_specification_id")
+  notes                                  String?
+  is_active                              Int
+  is_broker                              Int
+  delivery_date                          DateTime?           @db.Date
+  contracting_date                       DateTime?           @db.Date
+  created_by                             String?             @db.Uuid
+  updated_by                             String?             @db.Uuid
+  is_eligible_for_rent                   Int
+  is_locked                              Int
+  lock_date                              DateTime?           @db.Timestamp(6)
+  locked_by                              String?             @db.Uuid
+  unlock_date                            DateTime?           @db.Timestamp(6)
+  unlocked_by                            String?             @db.Uuid
+  created_at                             DateTime?           @default(now()) @db.Timestamp(6)
+  updated_at                             DateTime?           @db.Timestamp(6)
+  unit_specifications                    unit_specifications @relation(fields: [unit_specification_id], references: [id], onDelete: SetNull, map: "fk_project_unit_specification")
+  employees_units_created_byToemployees  employees?          @relation("units_created_byToemployees", fields: [created_by], references: [id], map: "fk_unit_created_by")
+  employees_units_locked_byToemployees   employees?          @relation("units_locked_byToemployees", fields: [locked_by], references: [id], map: "fk_unit_locked_by")
+  company_project                        company_project     @relation(fields: [project_id], references: [id], onDelete: SetNull, map: "fk_unit_project")
+  employees_units_unlocked_byToemployees employees?          @relation("units_unlocked_byToemployees", fields: [unlocked_by], references: [id], map: "fk_unit_unlocked_by")
+  employees_units_updated_byToemployees  employees?          @relation("units_updated_byToemployees", fields: [updated_by], references: [id], map: "fk_unit_updated_by")
 }

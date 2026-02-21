@@ -1,8 +1,9 @@
 import { Controller, Post, Body, Req, Get, Query, Param, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { Public } from "../decorators/public.decorator";
-import { LoginDto } from "./dtos/login.dto";
-import { ChangePasswordDto } from "./dtos/change-password.dto";
+import { Public } from "../common/decorators/public.decorator";
+import * as dtos from "./dtos/index.dtos";
+import { CurrentUser } from "src/common/decorators/user.decorator";
+import type * as interfaces from 'src/common/interfaces/index.interfaces';
 
 @Controller("auth")
 export class AuthController {
@@ -10,7 +11,7 @@ export class AuthController {
 
   @Public()
   @Post("login")
-  async login(@Req() req, @Body() loginDto: LoginDto) {    
+  async login(@Req() req, @Body() loginDto: dtos.LoginDto) {
     const user = await this.authService.validateEmployee(loginDto);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -19,13 +20,13 @@ export class AuthController {
   }
 
   @Post("reset-password")
-  async resetPassword(@Body() body: {employee_id: string}) {    
-    return this.authService.resetPassword(body.employee_id);
+  async resetPassword(@Body() body: dtos.ResetPasswordDto) {
+    return this.authService.resetPassword(body);
   }
 
   @Post("change-password")
-  async changePassword(@Req() req, @Body() body: ChangePasswordDto) {    
-    return this.authService.changePassword(req.user.employee_id, body);
+  async changePassword(@CurrentUser() user: interfaces.User , @Body() body: dtos.ChangePasswordDto) {
+    return this.authService.changePassword(user, body);
   }
 
 }

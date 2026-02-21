@@ -37,7 +37,7 @@ export class CreateEmployeeDto {
 
   @IsOptional()
   @IsInt()
-  user_type_id?: number;
+  employee_type_id?: number;
 
   @IsOptional()
   @IsString()

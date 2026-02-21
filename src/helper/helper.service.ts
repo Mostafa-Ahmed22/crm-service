@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { LocationEntity } from 'src/definitions/entities/locations.entity';
+import { LocationNode } from 'src/definitions/interfaces/locations.interface';
 
 @Injectable()
 export class HelperService {
 
-  generateRandomPass(passLength){ 
+  generateRandomPass(passLength:number){ 
     let pass = ''; 
     let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 
         + 'abcdefghijklmnopqrstuvwxyz'
@@ -39,5 +41,27 @@ export class HelperService {
               </body>
               </html>
               `
-    }
   }
+  
+  private buildLocationHierarchy(
+    locations: LocationEntity[],
+    language: string,
+    parentId: number | null = null
+  ): LocationNode[] {
+    return locations
+      .filter((location) => location.parent_location_id === parentId)
+      .map((location) => ({
+        id: location.id,
+        name: location[`${language}_name`] ?? location.en_name,
+        parent_location_id: location.parent_location_id,
+        children: this.buildLocationHierarchy(locations, language, location.id)
+      }));
+  }
+  
+  getLocationHierarchy(
+    locations: LocationEntity[],
+    language: string
+  ): LocationNode[] {
+    return this.buildLocationHierarchy(locations, language);
+  }
+}

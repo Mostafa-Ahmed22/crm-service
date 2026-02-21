@@ -8,8 +8,8 @@ POST {{host}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "superAdmin@Amer.com",
-  //"email": "mostafa.ahmedd@acapitalholding.com",
+  //"email": "superAdmin@Amer.com",
+  "email": "mostafa.ahmedd@acapitalholding.com",
   //"password": "C72L0nes"
   "password": "mostafa@222"
 }
@@ -17,6 +17,25 @@ Content-Type: application/json
 ####################
 
 @authorization = Bearer {{login.response.body.result.access_token}}
+
+
+########################################
+POST {{host}}/definitions/projects
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "projects": [
+    //{ "en_name": "Porto Matrouh", "ar_name": "بورتو مطروح", "company_code": "2707", "project_code": "PMATROUH" },
+    //{ "en_name": "Porto Golf Marina", "ar_name": "بورتو جولف مارينا", "company_code": "2704", "project_code": "GMARINA" },
+    { "en_name": "Porto Sharm", "ar_name": "بورتو شرم", "company_code": "2708", "project_code": "PSHARM" },
+    { "en_name": "Porto Saeid", "ar_name": "بورتو السعيد", "company_code": "2712", "project_code": "PSAID" },
+    { "en_name": "Porto Sokhna", "ar_name": "بورتو السخنة", "company_code": "2701", "project_code": "PSOKHNA" },
+    { "en_name": "Porto Marina", "ar_name": "بورتو مارينا", "company_code": "2703", "project_code": "PMARINA" },
+    { "en_name": "Porto South Peach", "ar_name": "بورتو ساوث بيتش", "company_code": "2706", 	"project_code": "PSBS" }
+  ]
+}
+
 
 ########################### create new menu
 
@@ -56,151 +75,158 @@ Authorization: {{authorization}}
 }
 ########################### create new module
 
-POST {{host}}/definitions/create-menuItems
+POST {{host}}/definitions/menuitems
 Content-Type: application/json
 Authorization: {{authorization}}
 
 {
-  "menuItems": [
-    { "menu_id": 1, "en_name": "Dashboard", "ar_name": "لوحة التحكم" },
+  "menuitems": [
+    { "menu_id": 1, "en_name": "Dashboard", "ar_name": "لوحة التحكم", "screen": "/dashboard" },
 
-    { "menu_id": 3, "en_name": "Client", "ar_name": "العميل" },
-    { "menu_id": 3, "en_name": "Area", "ar_name": "المنطقة" },
-    { "menu_id": 3, "en_name": "Positions", "ar_name": "الموظفين" },
-    { "menu_id": 3, "en_name": "Safe", "ar_name": "الخزانة" },
-    { "menu_id": 3, "en_name": "Project", "ar_name": "المشروع" },
-    { "menu_id": 3, "en_name": "Location Type", "ar_name": "نوع الموقع" },
-    { "menu_id": 3, "en_name": "Department", "ar_name": "القسم" },
-    { "menu_id": 3, "en_name": "Category", "ar_name": "الفئة" },
-    { "menu_id": 3, "en_name": "Brand", "ar_name": "العلامة التجارية" },
-    { "menu_id": 3, "en_name": "Model", "ar_name": "الموديل" },
-    { "menu_id": 3, "en_name": "Location", "ar_name": "الموقع" },
-    { "menu_id": 3, "en_name": "Employee", "ar_name": "الموظف" },
-    { "menu_id": 3, "en_name": "Maintenance Plan Type", "ar_name": "نوع خطة الصيانة" },
-    { "menu_id": 3, "en_name": "Tax", "ar_name": "الضريبة" },
-    { "menu_id": 3, "en_name": "Contract Type", "ar_name": "نوع العقد" },
-    { "menu_id": 3, "en_name": "Sister Companies", "ar_name": "الشركات الشقيقة" },
-    { "menu_id": 3, "en_name": "Invoice Types", "ar_name": "أنواع الفواتير" },
-    { "menu_id": 3, "en_name": "Complain Classifications", "ar_name": "تصنيفات الشكاوى" },
-    { "menu_id": 3, "en_name": "Transaction Type Groups", "ar_name": "مجموعات أنواع المعاملات" },
-    { "menu_id": 3, "en_name": "Transaction Types", "ar_name": "أنواع المعاملات" },
-    { "menu_id": 3, "en_name": "Service Provider Companies", "ar_name": "شركات مزودي الخدمة" },
-    { "menu_id": 3, "en_name": "Bank-Keys", "ar_name": "مفاتيح البنوك" },
-    { "menu_id": 3, "en_name": "Service Categories", "ar_name": "فئات الخدمات" },
-    { "menu_id": 3, "en_name": "Rental Companies", "ar_name": "شركات التأجير" },
-    { "menu_id": 3, "en_name": "Zones", "ar_name": "المناطق" },
+    { "menu_id": 3, "en_name": "Client", "ar_name": "العميل", "screen": "/client" },
+    { "menu_id": 3, "en_name": "Area", "ar_name": "المنطقة", "screen": "/area" },
+    { "menu_id": 3, "en_name": "Positions", "ar_name": "الموظفين", "screen": "/positions" },
+    { "menu_id": 3, "en_name": "Safe", "ar_name": "الخزانة", "screen": "/safe" },
+    { "menu_id": 3, "en_name": "Project", "ar_name": "المشروع", "screen": "/project" },
+    { "menu_id": 3, "en_name": "Location Type", "ar_name": "نوع الموقع", "screen": "/location-type" },
+    { "menu_id": 3, "en_name": "Department", "ar_name": "القسم", "screen": "/department" },
+    { "menu_id": 3, "en_name": "Category", "ar_name": "الفئة", "screen": "/category" },
+    { "menu_id": 3, "en_name": "Brand", "ar_name": "العلامة التجارية", "screen": "/brand" },
+    { "menu_id": 3, "en_name": "Model", "ar_name": "الموديل", "screen": "/model" },
+    { "menu_id": 3, "en_name": "Location", "ar_name": "الموقع", "screen": "/location" },
+    { "menu_id": 3, "en_name": "Employee", "ar_name": "الموظف", "screen": "/employee" },
+    { "menu_id": 3, "en_name": "Maintenance Plan Type", "ar_name": "نوع خطة الصيانة", "screen": "/maintenance-plan-type" },
+    { "menu_id": 3, "en_name": "Tax", "ar_name": "الضريبة", "screen": "/tax" },
+    { "menu_id": 3, "en_name": "Contract Type", "ar_name": "نوع العقد", "screen": "/contract-type" },
+    { "menu_id": 3, "en_name": "Sister Companies", "ar_name": "الشركات الشقيقة", "screen": "/sister-companies" },
+    { "menu_id": 3, "en_name": "Invoice Types", "ar_name": "أنواع الفواتير", "screen": "/invoice-types" },
+    { "menu_id": 3, "en_name": "Complain Classifications", "ar_name": "تصنيفات الشكاوى", "screen": "/complain-classifications" },
+    { "menu_id": 3, "en_name": "Transaction Type Groups", "ar_name": "مجموعات أنواع المعاملات", "screen": "/transaction-type-groups" },
+    { "menu_id": 3, "en_name": "Transaction Types", "ar_name": "أنواع المعاملات", "screen": "/transaction-types" },
+    { "menu_id": 3, "en_name": "Service Provider Companies", "ar_name": "شركات مزودي الخدمة", "screen": "/service-provider-companies" },
+    { "menu_id": 3, "en_name": "Bank-Keys", "ar_name": "مفاتيح البنوك", "screen": "/bank-keys" },
+    { "menu_id": 3, "en_name": "Service Categories", "ar_name": "فئات الخدمات", "screen": "/service-categories" },
+    { "menu_id": 3, "en_name": "Rental Companies", "ar_name": "شركات التأجير", "screen": "/rental-companies" },
+    { "menu_id": 3, "en_name": "Zones", "ar_name": "المناطق", "screen": "/zones" },
 
-    { "menu_id": 4, "en_name": "Search Assets", "ar_name": "بحث الأصول" },
-    { "menu_id": 4, "en_name": "Add Asset", "ar_name": "إضافة أصل" },
+    { "menu_id": 4, "en_name": "Search Assets", "ar_name": "بحث الأصول", "screen": "/search-assets" },
+    { "menu_id": 4, "en_name": "Add Asset", "ar_name": "إضافة أصل", "screen": "/add-asset" },
+    { "menu_id": 4, "en_name": "Depreciation", "ar_name": "الاستهلاك", "screen": "/depreciation" },
+    { "menu_id": 4, "en_name": "Asset Import", "ar_name": "استيراد الأصول", "screen": "/asset-import" },
+    { "menu_id": 4, "en_name": "Asset Export", "ar_name": "تصدير الأصول", "screen": "/asset-export" },
 
-    { "menu_id": 5, "en_name": "Maintenance Plan Type", "ar_name": "نوع خطة الصيانة" },
-    { "menu_id": 5, "en_name": "Review", "ar_name": "مراجعة" },
-    { "menu_id": 5, "en_name": "Create MP", "ar_name": "إنشاء خطة صيانة" },
-    { "menu_id": 5, "en_name": "Search MP", "ar_name": "بحث خطة صيانة" },
-    { "menu_id": 5, "en_name": "MP Assign Employee", "ar_name": "تعيين موظف" },
-    { "menu_id": 5, "en_name": "MP Calendar", "ar_name": "تقويم خطة الصيانة" },
-    { "menu_id": 5, "en_name": "Corrective MP", "ar_name": "خطة صيانة تصحيحية" },
-    { "menu_id": 5, "en_name": "Daily Tasks", "ar_name": "المهام اليومية" },
-    { "menu_id": 5, "en_name": "Print Daily Tasks", "ar_name": "طباعة المهام اليومية" },
+    { "menu_id": 5, "en_name": "Maintenance Plan Type", "ar_name": "نوع خطة الصيانة", "screen": "/maintenance-plan-type" },
+    { "menu_id": 5, "en_name": "Review", "ar_name": "مراجعة", "screen": "/review" },
+    { "menu_id": 5, "en_name": "Create MP", "ar_name": "إنشاء خطة صيانة", "screen": "/create-mp" },
+    { "menu_id": 5, "en_name": "Search MP", "ar_name": "بحث خطة صيانة", "screen": "/search-mp" },
+    { "menu_id": 5, "en_name": "MP Assign Employee", "ar_name": "تعيين موظف", "screen": "/mp-assign-employee" },
+    { "menu_id": 5, "en_name": "MP Calendar", "ar_name": "تقويم خطة الصيانة", "screen": "/mp-calendar" },
+    { "menu_id": 5, "en_name": "Corrective MP", "ar_name": "خطة صيانة تصحيحية", "screen": "/corrective-mp" },
+    { "menu_id": 5, "en_name": "Daily Tasks", "ar_name": "المهام اليومية", "screen": "/daily-tasks" },
+    { "menu_id": 5, "en_name": "Print Daily Tasks", "ar_name": "طباعة المهام اليومية", "screen": "/print-daily-tasks" },
 
-    { "menu_id": 6, "en_name": "HouseKeeping Types", "ar_name": "أنواع التنظيف" },
-    { "menu_id": 6, "en_name": "Create", "ar_name": "إنشاء" },
-    { "menu_id": 6, "en_name": "Search", "ar_name": "بحث" },
-    { "menu_id": 6, "en_name": "Assign Employee", "ar_name": "تعيين موظف" },
-    { "menu_id": 6, "en_name": "Calendar", "ar_name": "التقويم" },
-    { "menu_id": 6, "en_name": "Daily Tasks", "ar_name": "المهام اليومية" },
-    { "menu_id": 6, "en_name": "Review", "ar_name": "مراجعة" },
-    { "menu_id": 6, "en_name": "Print Daily Tasks", "ar_name": "طباعة المهام اليومية" },
+    { "menu_id": 6, "en_name": "HouseKeeping Types", "ar_name": "أنواع التنظيف", "screen": "/housekeeping-types" },
+    { "menu_id": 6, "en_name": "Create", "ar_name": "إنشاء", "screen": "/create-housekeeping" },
+    { "menu_id": 6, "en_name": "Search", "ar_name": "بحث", "screen": "/search-housekeeping" },
+    { "menu_id": 6, "en_name": "Assign Employee", "ar_name": "تعيين موظف", "screen": "/assign-employee" },
+    { "menu_id": 6, "en_name": "Calendar", "ar_name": "التقويم", "screen": "/calendar" },
+    { "menu_id": 6, "en_name": "Daily Tasks", "ar_name": "المهام اليومية", "screen": "/daily-tasks" },
+    { "menu_id": 6, "en_name": "Review", "ar_name": "مراجعة", "screen": "/review" },
+    { "menu_id": 6, "en_name": "Print Daily Tasks", "ar_name": "طباعة المهام اليومية", "screen": "/print-daily-tasks" },
 
-    { "menu_id": 7, "en_name": "Search Unit", "ar_name": "بحث وحدة" },
+    { "menu_id": 7, "en_name": "Search Unit", "ar_name": "بحث وحدة", "screen": "/search-unit" },
+    { "menu_id": 7, "en_name": "Add Unit", "ar_name": "إضافة وحدة", "screen": "/add-unit" },
+    { "menu_id": 7, "en_name": "Unit Import", "ar_name": "استيراد الوحدات", "screen": "/unit-import" },
+    { "menu_id": 7, "en_name": "Unit Export", "ar_name": "تصدير الوحدات", "screen": "/unit-export" },
 
-    { "menu_id": 8, "en_name": "Service Search", "ar_name": "بحث خدمة" },
-    { "menu_id": 8, "en_name": "Add Service", "ar_name": "إضافة خدمة" },
+    { "menu_id": 8, "en_name": "Service Search", "ar_name": "بحث خدمة", "screen": "/service-search" },
+    { "menu_id": 8, "en_name": "Add Service", "ar_name": "إضافة خدمة", "screen": "/add-service" },
 
-    { "menu_id": 9, "en_name": "CRM", "ar_name": "إدارة علاقات العملاء" },
+    { "menu_id": 9, "en_name": "CRM", "ar_name": "إدارة علاقات العملاء", "screen": "/crm" },
 
-    { "menu_id": 10, "en_name": "Search Customer", "ar_name": "بحث عميل" },
+    { "menu_id": 10, "en_name": "Search Customer", "ar_name": "بحث عميل", "screen": "/search-customer" },
+    { "menu_id": 10, "en_name": "Add Customer", "ar_name": "إضافة عميل", "screen": "/add-customer" },
 
-    { "menu_id": 11, "en_name": "Document Library", "ar_name": "مكتبة المستندات" },
+    { "menu_id": 11, "en_name": "Document Library", "ar_name": "مكتبة المستندات", "screen": "/document-library" },
 
-    { "menu_id": 12, "en_name": "News", "ar_name": "الأخبار" },
+    { "menu_id": 12, "en_name": "News", "ar_name": "الأخبار", "screen": "/news" },
 
-    { "menu_id": 13, "en_name": "Ads", "ar_name": "الإعلانات" },
+    { "menu_id": 13, "en_name": "Ads", "ar_name": "الإعلانات", "screen": "/ads" },
 
-    { "menu_id": 14, "en_name": "Add Rental File", "ar_name": "إضافة ملف تأجير" },
-    { "menu_id": 14, "en_name": "All Files", "ar_name": "كل الملفات" },
+    { "menu_id": 14, "en_name": "Add Rental File", "ar_name": "إضافة ملف تأجير", "screen": "/add-rental-file" },
+    { "menu_id": 14, "en_name": "All Files", "ar_name": "كل الملفات", "screen": "/all-files" },
 
-    { "menu_id": 15, "en_name": "Annual Maintenece", "ar_name": "الصيانة السنوية" },
-    { "menu_id": 15, "en_name": "Add a Transaction", "ar_name": "إضافة معاملة" },
-    { "menu_id": 15, "en_name": "Reports", "ar_name": "التقارير" },
+    { "menu_id": 15, "en_name": "Annual Maintenece", "ar_name": "الصيانة السنوية", "screen": "/annual-maintenece" },
+    { "menu_id": 15, "en_name": "Add a Transaction", "ar_name": "إضافة معاملة", "screen": "/add-transaction" },
+    { "menu_id": 15, "en_name": "Reports", "ar_name": "التقارير", "screen": "/reports" },
 
-    { "menu_id": 16, "en_name": "Add Ticket", "ar_name": "إضافة تذكرة" },
-    { "menu_id": 16, "en_name": "Search Tickets", "ar_name": "بحث التذاكر" },
-    { "menu_id": 16, "en_name": "Ticket", "ar_name": "تذكرة" },
-    { "menu_id": 16, "en_name": "Add Ticket", "ar_name": "إضافة تذكرة" },
-    { "menu_id": 16, "en_name": "Search Tickets", "ar_name": "بحث التذاكر" },
-    { "menu_id": 16, "en_name": "All Tickets", "ar_name": "كل التذاكر" },
-    { "menu_id": 16, "en_name": "Mobile Request", "ar_name": "طلب عبر الهاتف" },
-    { "menu_id": 16, "en_name": "Under Process", "ar_name": "قيد التنفيذ" },
-    { "menu_id": 16, "en_name": "CTS", "ar_name": "نظام CTS" },
-    { "menu_id": 16, "en_name": "History", "ar_name": "السجل" },
+    { "menu_id": 16, "en_name": "Add Ticket", "ar_name": "إضافة تذكرة", "screen": "/add-ticket" },
+    { "menu_id": 16, "en_name": "Search Tickets", "ar_name": "بحث التذاكر", "screen": "/search-tickets" },
+    { "menu_id": 16, "en_name": "Ticket", "ar_name": "تذكرة", "screen": "/ticket" },
+    { "menu_id": 16, "en_name": "All Tickets", "ar_name": "كل التذاكر", "screen": "/all-tickets" },
+    { "menu_id": 16, "en_name": "Mobile Request", "ar_name": "طلب عبر الهاتف", "screen": "/mobile-request" },
+    { "menu_id": 16, "en_name": "Under Process", "ar_name": "قيد التنفيذ", "screen": "/under-process" },
+    { "menu_id": 16, "en_name": "CTS", "ar_name": "نظام CTS", "screen": "/cts" },
+    { "menu_id": 16, "en_name": "History", "ar_name": "السجل", "screen": "/history" },
 
-    { "menu_id": 17, "en_name": "Search Inquiry", "ar_name": "بحث استفسار" },
-    { "menu_id": 17, "en_name": "Add Inquiry", "ar_name": "إضافة استفسار" },
+    { "menu_id": 17, "en_name": "Search Inquiry", "ar_name": "بحث استفسار", "screen": "/search-inquiry" },
+    { "menu_id": 17, "en_name": "Add Inquiry", "ar_name": "إضافة استفسار", "screen": "/add-inquiry" },
 
-    { "menu_id": 18, "en_name": "Add Complain", "ar_name": "إضافة شكوى" },
+    { "menu_id": 18, "en_name": "Search Complain", "ar_name": "بحث شكوى", "screen": "/search-complain" },
+    { "menu_id": 18, "en_name": "Add Complain", "ar_name": "إضافة شكوى", "screen": "/add-complain" },
 
-    { "menu_id": 19, "en_name": "Invoices", "ar_name": "الفواتير" },
-    { "menu_id": 19, "en_name": "Create", "ar_name": "إنشاء" },
-    { "menu_id": 19, "en_name": "Pending Invoices", "ar_name": "الفواتير المعلقة" },
-    { "menu_id": 19, "en_name": "Search Invoices", "ar_name": "بحث الفواتير" },
-    { "menu_id": 19, "en_name": "All Invoices", "ar_name": "كل الفواتير" },
-    { "menu_id": 19, "en_name": "Void Requests", "ar_name": "طلبات الإلغاء" },
-    { "menu_id": 19, "en_name": "End Of Day", "ar_name": "نهاية اليوم" },
-    { "menu_id": 19, "en_name": "Full End Of Day", "ar_name": "نهاية اليوم الكاملة" },
+    { "menu_id": 19, "en_name": "Invoices", "ar_name": "الفواتير", "screen": "/invoices" },
+    { "menu_id": 19, "en_name": "Create", "ar_name": "إنشاء", "screen": "/create" },
+    { "menu_id": 19, "en_name": "Pending Invoices", "ar_name": "الفواتير المعلقة", "screen": "/pending-invoices" },
+    { "menu_id": 19, "en_name": "Search Invoices", "ar_name": "بحث الفواتير", "screen": "/search-invoices" },
+    { "menu_id": 19, "en_name": "All Invoices", "ar_name": "كل الفواتير", "screen": "/all-invoices" },
+    { "menu_id": 19, "en_name": "Void Requests", "ar_name": "طلبات الإلغاء", "screen": "/void-requests" },
+    { "menu_id": 19, "en_name": "End Of Day", "ar_name": "نهاية اليوم", "screen": "/end-of-day" },
+    { "menu_id": 19, "en_name": "Full End Of Day", "ar_name": "نهاية اليوم الكاملة", "screen": "/full-end-of-day" },
+    { "menu_id": 19, "en_name": "Online Payments Report", "ar_name": "تقرير المدفوعات عبر الإنترنت", "screen": "/online-payments-report" },
 
-    { "menu_id": 20, "en_name": "Contract", "ar_name": "العقد" },
-    { "menu_id": 20, "en_name": "Search Contracts", "ar_name": "بحث العقود" },
-    { "menu_id": 20, "en_name": "Create Contract", "ar_name": "إنشاء عقد" },
-    { "menu_id": 20, "en_name": "Reschedual Approvals", "ar_name": "موافقات إعادة الجدولة" },
-    { "menu_id": 20, "en_name": "Search Requests", "ar_name": "بحث الطلبات" },
-    { "menu_id": 20, "en_name": "Payment List", "ar_name": "قائمة المدفوعات" },
+    { "menu_id": 20, "en_name": "Contract", "ar_name": "العقد", "screen": "/contract" },
+    { "menu_id": 20, "en_name": "Search Contracts", "ar_name": "بحث العقود", "screen": "/search-contracts" },
+    { "menu_id": 20, "en_name": "Create Contract", "ar_name": "إنشاء عقد", "screen": "/create-contract" },
+    { "menu_id": 20, "en_name": "Reschedual Approvals", "ar_name": "موافقات إعادة الجدولة", "screen": "/reschedual-approvals" },
+    { "menu_id": 20, "en_name": "Search Requests", "ar_name": "بحث الطلبات", "screen": "/search-requests" },
+    { "menu_id": 20, "en_name": "Payment List", "ar_name": "قائمة المدفوعات", "screen": "/payment-list" },
 
-    { "menu_id": 21, "en_name": "Mobile Services", "ar_name": "الخدمات المحمولة" },
-    { "menu_id": 21, "en_name": "Notification Center", "ar_name": "مركز الإشعارات" },
-    { "menu_id": 21, "en_name": "Notification Log", "ar_name": "سجل الإشعارات" },
-    { "menu_id": 21, "en_name": "Visits", "ar_name": "الزيارات" },
+    { "menu_id": 21, "en_name": "Mobile Services", "ar_name": "الخدمات المحمولة", "screen": "/mobile-services" },
+    { "menu_id": 21, "en_name": "Notification Center", "ar_name": "مركز الإشعارات", "screen": "/notification-center" },
+    { "menu_id": 21, "en_name": "Notification Log", "ar_name": "سجل الإشعارات", "screen": "/notification-log" },
+    { "menu_id": 21, "en_name": "Visits", "ar_name": "الزيارات", "screen": "/visits" },
 
-    { "menu_id": 22, "en_name": "Reports", "ar_name": "التقارير" },
-    { "menu_id": 22, "en_name": "Online Payments", "ar_name": "المدفوعات الإلكترونية" },
-    { "menu_id": 22, "en_name": "Daily Invoices", "ar_name": "الفواتير اليومية" },
-    { "menu_id": 22, "en_name": "Grouped Daily Invoices", "ar_name": "الفواتير اليومية المجمعة" },
-    { "menu_id": 22, "en_name": "End Of Day", "ar_name": "نهاية اليوم" },
-    { "menu_id": 22, "en_name": "Detailed Daily Invoices", "ar_name": "الفواتير اليومية التفصيلية" },
-    { "menu_id": 22, "en_name": "Sap Invoices Report", "ar_name": "تقرير فواتير SAP" },
-    { "menu_id": 22, "en_name": "Voids", "ar_name": "الفواتير الملغاة" },
-    { "menu_id": 22, "en_name": "Department Service End Of Day Report", "ar_name": "تقرير نهاية اليوم لخدمات الأقسام" },
-    { "menu_id": 22, "en_name": "Current Work Orders", "ar_name": "أوامر العمل الحالية" },
-    { "menu_id": 22, "en_name": "System Logs", "ar_name": "سجلات النظام" },
-    { "menu_id": 22, "en_name": "Deprecated Assets", "ar_name": "الأصول المهملة" },
-    { "menu_id": 22, "en_name": "Delayed Tickets", "ar_name": "التذاكر المتأخرة" },
+    { "menu_id": 22, "en_name": "Reports", "ar_name": "التقارير", "screen": "/reports" },
+    { "menu_id": 22, "en_name": "Online Payments", "ar_name": "المدفوعات الإلكترونية", "screen": "/online-payments" },
+    { "menu_id": 22, "en_name": "Daily Invoices", "ar_name": "الفواتير اليومية", "screen": "/daily-invoices" },
+    { "menu_id": 22, "en_name": "Grouped Daily Invoices", "ar_name": "الفواتير اليومية المجمعة", "screen": "/grouped-daily-invoices" },
+    { "menu_id": 22, "en_name": "End Of Day", "ar_name": "نهاية اليوم", "screen": "/end-of-day" },
+    { "menu_id": 22, "en_name": "Detailed Daily Invoices", "ar_name": "الفواتير اليومية التفصيلية", "screen": "/detailed-daily-invoices" },
+    { "menu_id": 22, "en_name": "Sap Invoices Report", "ar_name": "تقرير فواتير SAP", "screen": "/sap-invoices-report" },
+    { "menu_id": 22, "en_name": "Voids", "ar_name": "الفواتير الملغاة", "screen": "/voids" },
+    { "menu_id": 22, "en_name": "Department Service End Of Day Report", "ar_name": "تقرير نهاية اليوم لخدمات الأقسام", "screen": "/department-service-end-of-day-report" },
+    { "menu_id": 22, "en_name": "Current Work Orders", "ar_name": "أوامر العمل الحالية", "screen": "/current-work-orders" },
+    { "menu_id": 22, "en_name": "System Logs", "ar_name": "سجلات النظام", "screen": "/system-logs" },
+    { "menu_id": 22, "en_name": "Deprecated Assets", "ar_name": "الأصول المهملة", "screen": "/deprecated-assets" },
+    { "menu_id": 22, "en_name": "Delayed Tickets", "ar_name": "التذاكر المتأخرة", "screen": "/delayed-tickets" },
 
-    { "menu_id": 23, "en_name": "Security", "ar_name": "الأمان" },
+    { "menu_id": 23, "en_name": "Security", "ar_name": "الأمان", "screen": "/security" },
 
-    { "menu_id": 24, "en_name": "Users", "ar_name": "المستخدمين" },
-    { "menu_id": 24, "en_name": "Manage Users", "ar_name": "إدارة المستخدمين" },
-    { "menu_id": 24, "en_name": "Add User", "ar_name": "إضافة مستخدم" },
-    { "menu_id": 24, "en_name": "Pending Requests", "ar_name": "الطلبات المعلقة" },
+    { "menu_id": 24, "en_name": "Users", "ar_name": "المستخدمين", "screen": "/users" },
+    { "menu_id": 24, "en_name": "Manage Users", "ar_name": "إدارة المستخدمين", "screen": "/manage-users" },
+    { "menu_id": 24, "en_name": "Add User", "ar_name": "إضافة مستخدم", "screen": "/add-user" },
+    { "menu_id": 24, "en_name": "Pending Requests", "ar_name": "الطلبات المعلقة", "screen": "/pending-requests" },
 
-    { "menu_id": 25, "en_name": "Roles", "ar_name": "الأدوار" },
-    { "menu_id": 25, "en_name": "Manage Roles", "ar_name": "إدارة الأدوار" },
-    { "menu_id": 25, "en_name": "Add Role", "ar_name": "إضافة دور" },
+    { "menu_id": 25, "en_name": "Roles", "ar_name": "الأدوار", "screen": "/roles" },
+    { "menu_id": 25, "en_name": "Manage Roles", "ar_name": "إدارة الأدوار", "screen": "/manage-roles" },
+    { "menu_id": 25, "en_name": "Add Role", "ar_name": "إضافة دور", "screen": "/add-role" },
 
-    { "menu_id": 26, "en_name": "System Settings", "ar_name": "إعدادات النظام" },
-    { "menu_id": 26, "en_name": "System Configuration", "ar_name": "إعدادات النظام" },
-    { "menu_id": 26, "en_name": "Explicit System Configuration", "ar_name": "إعدادات النظام التفصيلية" },
-    { "menu_id": 26, "en_name": "Attendance", "ar_name": "الحضور" },
-    { "menu_id": 26, "en_name": "Mobile Error Logs", "ar_name": "سجلات أخطاء الهاتف المحمول" }
+    { "menu_id": 26, "en_name": "System Settings", "ar_name": "إعدادات النظام", "screen": "/system-settings" },
+    { "menu_id": 26, "en_name": "System Configuration", "ar_name": "إعدادات النظام", "screen": "/system-configuration" },
+    { "menu_id": 26, "en_name": "Explicit System Configuration", "ar_name": "إعدادات النظام التفصيلية", "screen": "/explicit-system-configuration" },
+    { "menu_id": 26, "en_name": "Attendance", "ar_name": "الحضور", "screen": "/attendance" },
+    { "menu_id": 26, "en_name": "Mobile Error Logs", "ar_name": "سجلات أخطاء الهاتف المحمول", "screen": "/mobile-error-logs" }
   ]
 }
 
@@ -268,7 +294,7 @@ Authorization: {{authorization}}
 
 ########################### get features
 
-GET {{host}}/definitions/get-privileges?lang=en&privilegeName=customer
+GET {{host}}/definitions/privileges?lang=en
 # GET {{host}}/definitions/get-features?lang=en&moduleName=d
 Content-Type: application/json
 Authorization: {{authorization}}
@@ -286,226 +312,226 @@ Authorization: {{authorization}}
 
 {
   "privileges": [
-    { "menuItem_id": 2, "privilege_id": 1 },   
-    { "menuItem_id": 3, "privilege_id": 1 },   
-    { "menuItem_id": 6, "privilege_id": 1 },   
-    { "menuItem_id": 12, "privilege_id": 1 },  
-    { "menuItem_id": 50, "privilege_id": 1 },  
-    { "menuItem_id": 8, "privilege_id": 1 },   
-    { "menuItem_id": 9, "privilege_id": 1 },   
-    { "menuItem_id": 10, "privilege_id": 1 },  
-    { "menuItem_id": 11, "privilege_id": 1 },  
-    { "menuItem_id": 7, "privilege_id": 1 },   
-    { "menuItem_id": 13, "privilege_id": 1 },  
-    { "menuItem_id": 14, "privilege_id": 1 },  
-    { "menuItem_id": 28, "privilege_id": 1 },  
-    { "menuItem_id": 46, "privilege_id": 1 },  
-    { "menuItem_id": 48, "privilege_id": 1 },  
-    { "menuItem_id": 31, "privilege_id": 1 },  
-    { "menuItem_id": 106, "privilege_id": 1 }, 
-    { "menuItem_id": 110, "privilege_id": 1 }, 
-    { "menuItem_id": 59, "privilege_id": 1 },  
-    { "menuItem_id": 15, "privilege_id": 1 },  
-    { "menuItem_id": 80, "privilege_id": 1 },  
-    { "menuItem_id": 112, "privilege_id": 1 }, 
-    { "menuItem_id": 72, "privilege_id": 1 },  
-    { "menuItem_id": 38, "privilege_id": 1 },  
-    { "menuItem_id": 43, "privilege_id": 1 },  
-    { "menuItem_id": 5, "privilege_id": 1 },   
-    { "menuItem_id": 114, "privilege_id": 1 }, 
-    { "menuItem_id": 4, "privilege_id": 1 },   
-    { "menuItem_id": 17, "privilege_id": 1 },  
-    { "menuItem_id": 18, "privilege_id": 1 },  
-    { "menuItem_id": 67, "privilege_id": 1 },  
-    { "menuItem_id": 19, "privilege_id": 1 },  
-    { "menuItem_id": 71, "privilege_id": 1 },  
-    { "menuItem_id": 69, "privilege_id": 1 },  
-    { "menuItem_id": 52, "privilege_id": 1 },  
-    { "menuItem_id": 53, "privilege_id": 1 },  
-    { "menuItem_id": 56, "privilege_id": 1 },  
-    { "menuItem_id": 22, "privilege_id": 1 }, 
-    { "menuItem_id": 23, "privilege_id": 1 }, 
-    { "menuItem_id": 24, "privilege_id": 1 }, 
-    { "menuItem_id": 25, "privilege_id": 1 }, 
-    { "menuItem_id": 26, "privilege_id": 1 }, 
-    { "menuItem_id": 86, "privilege_id": 2 },  
-    { "menuItem_id": 31, "privilege_id": 2 }, 
-    { "menuItem_id": 104, "privilege_id": 28 },
-    { "menuItem_id": 31, "privilege_id": 3 }, 
-    { "menuItem_id": 43, "privilege_id": 3 }, 
-    { "menuItem_id": 46, "privilege_id": 3 }, 
-    { "menuItem_id": 43, "privilege_id": 5 }, 
-    { "menuItem_id": 31, "privilege_id": 5 },  
-    { "menuItem_id": 50, "privilege_id": 6 },  
-    { "menuItem_id": 72, "privilege_id": 7 },  
-    { "menuItem_id": 43, "privilege_id": 8 },  
-    { "menuItem_id": 58, "privilege_id": 10 }, 
-    { "menuItem_id": 43, "privilege_id": 11 }, 
-    { "menuItem_id": 31, "privilege_id": 11 }, 
-    { "menuItem_id": 58, "privilege_id": 12 }, 
-    { "menuItem_id": 5, "privilege_id": 13 },  
-    { "menuItem_id": 18, "privilege_id": 13 }, 
-    { "menuItem_id": 17, "privilege_id": 13 }, 
-    { "menuItem_id": 22, "privilege_id": 13 }, 
-    { "menuItem_id": 23, "privilege_id": 13 }, 
-    { "menuItem_id": 51, "privilege_id": 13 }, 
-    { "menuItem_id": 19, "privilege_id": 13 },
-    { "menuItem_id": 26, "privilege_id": 13 }, 
-    { "menuItem_id": 25, "privilege_id": 13 }, 
-    { "menuItem_id": 24, "privilege_id": 13 }, 
-    { "menuItem_id": 104, "privilege_id": 13 },
-    { "menuItem_id": 110, "privilege_id": 13 },
-    { "menuItem_id": 15, "privilege_id": 13 }, 
-    { "menuItem_id": 61, "privilege_id": 13 }, 
-    { "menuItem_id": 43, "privilege_id": 13 }, 
-    { "menuItem_id": 38, "privilege_id": 13 }, 
-    { "menuItem_id": 72, "privilege_id": 13 }, 
-    { "menuItem_id": 112, "privilege_id": 13 },
-    { "menuItem_id": 80, "privilege_id": 13 }, 
-    { "menuItem_id": 46, "privilege_id": 13 }, 
-    { "menuItem_id": 28, "privilege_id": 13 }, 
-    { "menuItem_id": 31, "privilege_id": 13 }, 
-    { "menuItem_id": 48, "privilege_id": 13 }, 
-    { "menuItem_id": 14, "privilege_id": 13 }, 
-    { "menuItem_id": 13, "privilege_id": 13 },
-    { "menuItem_id": 7, "privilege_id": 13 },    
-    { "menuItem_id": 11, "privilege_id": 13 },   
-    { "menuItem_id": 10, "privilege_id": 13 },   
-    { "menuItem_id": 9, "privilege_id": 13 },    
-    { "menuItem_id": 8, "privilege_id": 13 },    
-    { "menuItem_id": 12, "privilege_id": 13 },   
-    { "menuItem_id": 3, "privilege_id": 13 },    
-    { "menuItem_id": 6, "privilege_id": 13 },    
-    { "menuItem_id": 50, "privilege_id": 13 },   
-    { "menuItem_id": 2, "privilege_id": 13 },   
-    { "menuItem_id": 98, "privilege_id": 14 },  
-    { "menuItem_id": 101, "privilege_id": 15 }, 
-    { "menuItem_id": 95, "privilege_id": 16 },  
-    { "menuItem_id": 5, "privilege_id": 17 },   
-    { "menuItem_id": 4, "privilege_id": 17 },   
-    { "menuItem_id": 17, "privilege_id": 17 },  
-    { "menuItem_id": 18, "privilege_id": 17 },  
-    { "menuItem_id": 19, "privilege_id": 17 },  
-    { "menuItem_id": 67, "privilege_id": 17 },  
-    { "menuItem_id": 69, "privilege_id": 17 },  
-    { "menuItem_id": 52, "privilege_id": 17 },  
-    { "menuItem_id": 53, "privilege_id": 17 },  
-    { "menuItem_id": 22, "privilege_id": 17 },  
-    { "menuItem_id": 23, "privilege_id": 17 },  
-    { "menuItem_id": 24, "privilege_id": 17 },  
-    { "menuItem_id": 25, "privilege_id": 17 },  
-    { "menuItem_id": 26, "privilege_id": 17 },  
-    { "menuItem_id": 2, "privilege_id": 17 },   
-    { "menuItem_id": 3, "privilege_id": 17 },   
-    { "menuItem_id": 50, "privilege_id": 17 },  
-    { "menuItem_id": 12, "privilege_id": 17 },  
-    { "menuItem_id": 6, "privilege_id": 17 },   
-    { "menuItem_id": 8, "privilege_id": 17 },   
-    { "menuItem_id": 9, "privilege_id": 17 },   
-    { "menuItem_id": 10, "privilege_id": 17 },  
-    { "menuItem_id": 11, "privilege_id": 17 },  
-    { "menuItem_id": 7, "privilege_id": 17 },   
-    { "menuItem_id": 13, "privilege_id": 17 },  
-    { "menuItem_id": 14, "privilege_id": 17 },  
-    { "menuItem_id": 48, "privilege_id": 17 },  
-    { "menuItem_id": 31, "privilege_id": 17 },  
-    { "menuItem_id": 28, "privilege_id": 17 },  
-    { "menuItem_id": 46, "privilege_id": 17 },  
-    { "menuItem_id": 112, "privilege_id": 17 }, 
-    { "menuItem_id": 72, "privilege_id": 17 },  
-    { "menuItem_id": 38, "privilege_id": 17 },  
-    { "menuItem_id": 43, "privilege_id": 17 },  
-    { "menuItem_id": 15, "privilege_id": 17 },   
-    { "menuItem_id": 80, "privilege_id": 17 },   
-    { "menuItem_id": 110, "privilege_id": 17 },  
-    { "menuItem_id": 61, "privilege_id": 17 },   
-    { "menuItem_id": 104, "privilege_id": 17 },
-    { "menuItem_id": 47, "privilege_id": 17 }, 
-    { "menuItem_id": 61, "privilege_id": 18 },  
-    { "menuItem_id": 72, "privilege_id": 19 },  
-    { "menuItem_id": 58, "privilege_id": 19 },  
-    { "menuItem_id": 111, "privilege_id": 20 }, 
-    { "menuItem_id": 43, "privilege_id": 21 },  
-    { "menuItem_id": 46, "privilege_id": 21 },  
-    { "menuItem_id": 28, "privilege_id": 21 }, 
-    { "menuItem_id": 48, "privilege_id": 21 }, 
-    { "menuItem_id": 50, "privilege_id": 21 }, 
-    { "menuItem_id": 72, "privilege_id": 23 }, 
-    { "menuItem_id": 58, "privilege_id": 24 },  
-    { "menuItem_id": 61, "privilege_id": 25 }, 
-    { "menuItem_id": 104, "privilege_id": 26 },
-    { "menuItem_id": 115, "privilege_id": 27 }, 
-    { "menuItem_id": 46, "privilege_id": 29 },  
-    { "menuItem_id": 87, "privilege_id": 30 },  
-    { "menuItem_id": 91, "privilege_id": 31 },  
-    { "menuItem_id": 107, "privilege_id": 32 },
-    { "menuItem_id": 61, "privilege_id": 33 }, 
-    { "menuItem_id": 61, "privilege_id": 34 },  
-    { "menuItem_id": 15, "privilege_id": 34 },  
-    { "menuItem_id": 80, "privilege_id": 34 },  
-    { "menuItem_id": 110, "privilege_id": 34 }, 
-    { "menuItem_id": 104, "privilege_id": 34 }, 
-    { "menuItem_id": 72, "privilege_id": 34 },  
-    { "menuItem_id": 112, "privilege_id": 34 }, 
-    { "menuItem_id": 43, "privilege_id": 34 },  
-    { "menuItem_id": 38, "privilege_id": 34 },  
-    { "menuItem_id": 46, "privilege_id": 34 },  
-    { "menuItem_id": 48, "privilege_id": 34 },  
-    { "menuItem_id": 31, "privilege_id": 34 },  
-    { "menuItem_id": 28, "privilege_id": 34 },  
-    { "menuItem_id": 14, "privilege_id": 34 },  
-    { "menuItem_id": 13, "privilege_id": 34 },  
-    { "menuItem_id": 7, "privilege_id": 34 },   
-    { "menuItem_id": 8, "privilege_id": 34 },   
-    { "menuItem_id": 9, "privilege_id": 34 },   
-    { "menuItem_id": 11, "privilege_id": 34 },  
-    { "menuItem_id": 10, "privilege_id": 34 },  
-    { "menuItem_id": 12, "privilege_id": 34 },  
-    { "menuItem_id": 50, "privilege_id": 34 },  
-    { "menuItem_id": 6, "privilege_id": 34 },  
-    { "menuItem_id": 3, "privilege_id": 34 },  
-    { "menuItem_id": 2, "privilege_id": 34 },  
-    { "menuItem_id": 115, "privilege_id": 34 },
-    { "menuItem_id": 5, "privilege_id": 34 },  
-    { "menuItem_id": 4, "privilege_id": 34 },  
-    { "menuItem_id": 18, "privilege_id": 34 }, 
-    { "menuItem_id": 17, "privilege_id": 34 }, 
-    { "menuItem_id": 47, "privilege_id": 34 }, 
-    { "menuItem_id": 53, "privilege_id": 34 }, 
-    { "menuItem_id": 56, "privilege_id": 34 },  
-    { "menuItem_id": 69, "privilege_id": 34 }, 
-    { "menuItem_id": 52, "privilege_id": 34 }, 
-    { "menuItem_id": 1, "privilege_id": 34 },  
-    { "menuItem_id": 71, "privilege_id": 34 }, 
-    { "menuItem_id": 67, "privilege_id": 34 }, 
-    { "menuItem_id": 51, "privilege_id": 34 }, 
-    { "menuItem_id": 19, "privilege_id": 34 },  
-    { "menuItem_id": 25, "privilege_id": 34 }, 
-    { "menuItem_id": 26, "privilege_id": 34 }, 
-    { "menuItem_id": 72, "privilege_id": 35 }, 
-    { "menuItem_id": 61, "privilege_id": 35 }, 
-    { "menuItem_id": 83, "privilege_id": 36 },  
-    { "menuItem_id": 83, "privilege_id": 37 },  
-    { "menuItem_id": 104, "privilege_id": 38 },
-    { "menuItem_id": 71, "privilege_id": 39 }, 
-    { "menuItem_id": 31, "privilege_id": 40 }, 
-    { "menuItem_id": 43, "privilege_id": 40 }, 
-    { "menuItem_id": 83, "privilege_id": 41 },  
-    { "menuItem_id": 83, "privilege_id": 42 },  
-    { "menuItem_id": 99, "privilege_id": 9 },   
-    { "menuItem_id": 43, "privilege_id": 43 },  
-    { "menuItem_id": 31, "privilege_id": 43 }, 
-    { "menuItem_id": 111, "privilege_id": 44 }, 
-    { "menuItem_id": 100, "privilege_id": 45 },
-    { "menuItem_id": 104, "privilege_id": 46 },
-    { "menuItem_id": 104, "privilege_id": 47 },
-    { "menuItem_id": 86, "privilege_id": 48 }, 
-    { "menuItem_id": 72, "privilege_id": 49 }, 
-    { "menuItem_id": 77, "privilege_id": 50 }, 
-    { "menuItem_id": 97, "privilege_id": 51 },
-    { "menuItem_id": 72, "privilege_id": 49 },
-    { "menuItem_id": 77, "privilege_id": 50 }, 
-    { "menuItem_id": 97, "privilege_id": 51 } ]
+    { "menuitem_id": 2, "privilege_id": 1 },   
+    { "menuitem_id": 3, "privilege_id": 1 },   
+    { "menuitem_id": 6, "privilege_id": 1 },   
+    { "menuitem_id": 12, "privilege_id": 1 },  
+    { "menuitem_id": 50, "privilege_id": 1 },  
+    { "menuitem_id": 8, "privilege_id": 1 },   
+    { "menuitem_id": 9, "privilege_id": 1 },   
+    { "menuitem_id": 10, "privilege_id": 1 },  
+    { "menuitem_id": 11, "privilege_id": 1 },  
+    { "menuitem_id": 7, "privilege_id": 1 },   
+    { "menuitem_id": 13, "privilege_id": 1 },  
+    { "menuitem_id": 14, "privilege_id": 1 },  
+    { "menuitem_id": 28, "privilege_id": 1 },  
+    { "menuitem_id": 46, "privilege_id": 1 },  
+    { "menuitem_id": 48, "privilege_id": 1 },  
+    { "menuitem_id": 31, "privilege_id": 1 },  
+    { "menuitem_id": 106, "privilege_id": 1 }, 
+    { "menuitem_id": 110, "privilege_id": 1 }, 
+    { "menuitem_id": 59, "privilege_id": 1 },  
+    { "menuitem_id": 15, "privilege_id": 1 },  
+    { "menuitem_id": 80, "privilege_id": 1 },  
+    { "menuitem_id": 112, "privilege_id": 1 }, 
+    { "menuitem_id": 72, "privilege_id": 1 },  
+    { "menuitem_id": 38, "privilege_id": 1 },  
+    { "menuitem_id": 43, "privilege_id": 1 },  
+    { "menuitem_id": 5, "privilege_id": 1 },   
+    { "menuitem_id": 114, "privilege_id": 1 }, 
+    { "menuitem_id": 4, "privilege_id": 1 },   
+    { "menuitem_id": 17, "privilege_id": 1 },  
+    { "menuitem_id": 18, "privilege_id": 1 },  
+    { "menuitem_id": 67, "privilege_id": 1 },  
+    { "menuitem_id": 19, "privilege_id": 1 },  
+    { "menuitem_id": 71, "privilege_id": 1 },  
+    { "menuitem_id": 69, "privilege_id": 1 },  
+    { "menuitem_id": 52, "privilege_id": 1 },  
+    { "menuitem_id": 53, "privilege_id": 1 },  
+    { "menuitem_id": 56, "privilege_id": 1 },  
+    { "menuitem_id": 22, "privilege_id": 1 }, 
+    { "menuitem_id": 23, "privilege_id": 1 }, 
+    { "menuitem_id": 24, "privilege_id": 1 }, 
+    { "menuitem_id": 25, "privilege_id": 1 }, 
+    { "menuitem_id": 26, "privilege_id": 1 }, 
+    { "menuitem_id": 86, "privilege_id": 2 },  
+    { "menuitem_id": 31, "privilege_id": 2 }, 
+    { "menuitem_id": 104, "privilege_id": 28 },
+    { "menuitem_id": 31, "privilege_id": 3 }, 
+    { "menuitem_id": 43, "privilege_id": 3 }, 
+    { "menuitem_id": 46, "privilege_id": 3 }, 
+    { "menuitem_id": 43, "privilege_id": 5 }, 
+    { "menuitem_id": 31, "privilege_id": 5 },  
+    { "menuitem_id": 50, "privilege_id": 6 },  
+    { "menuitem_id": 72, "privilege_id": 7 },  
+    { "menuitem_id": 43, "privilege_id": 8 },  
+    { "menuitem_id": 58, "privilege_id": 10 }, 
+    { "menuitem_id": 43, "privilege_id": 11 }, 
+    { "menuitem_id": 31, "privilege_id": 11 }, 
+    { "menuitem_id": 58, "privilege_id": 12 }, 
+    { "menuitem_id": 5, "privilege_id": 13 },  
+    { "menuitem_id": 18, "privilege_id": 13 }, 
+    { "menuitem_id": 17, "privilege_id": 13 }, 
+    { "menuitem_id": 22, "privilege_id": 13 }, 
+    { "menuitem_id": 23, "privilege_id": 13 }, 
+    { "menuitem_id": 51, "privilege_id": 13 }, 
+    { "menuitem_id": 19, "privilege_id": 13 },
+    { "menuitem_id": 26, "privilege_id": 13 }, 
+    { "menuitem_id": 25, "privilege_id": 13 }, 
+    { "menuitem_id": 24, "privilege_id": 13 }, 
+    { "menuitem_id": 104, "privilege_id": 13 },
+    { "menuitem_id": 110, "privilege_id": 13 },
+    { "menuitem_id": 15, "privilege_id": 13 }, 
+    { "menuitem_id": 61, "privilege_id": 13 }, 
+    { "menuitem_id": 43, "privilege_id": 13 }, 
+    { "menuitem_id": 38, "privilege_id": 13 }, 
+    { "menuitem_id": 72, "privilege_id": 13 }, 
+    { "menuitem_id": 112, "privilege_id": 13 },
+    { "menuitem_id": 80, "privilege_id": 13 }, 
+    { "menuitem_id": 46, "privilege_id": 13 }, 
+    { "menuitem_id": 28, "privilege_id": 13 }, 
+    { "menuitem_id": 31, "privilege_id": 13 }, 
+    { "menuitem_id": 48, "privilege_id": 13 }, 
+    { "menuitem_id": 14, "privilege_id": 13 }, 
+    { "menuitem_id": 13, "privilege_id": 13 },
+    { "menuitem_id": 7, "privilege_id": 13 },    
+    { "menuitem_id": 11, "privilege_id": 13 },   
+    { "menuitem_id": 10, "privilege_id": 13 },   
+    { "menuitem_id": 9, "privilege_id": 13 },    
+    { "menuitem_id": 8, "privilege_id": 13 },    
+    { "menuitem_id": 12, "privilege_id": 13 },   
+    { "menuitem_id": 3, "privilege_id": 13 },    
+    { "menuitem_id": 6, "privilege_id": 13 },    
+    { "menuitem_id": 50, "privilege_id": 13 },   
+    { "menuitem_id": 2, "privilege_id": 13 },   
+    { "menuitem_id": 98, "privilege_id": 14 },  
+    { "menuitem_id": 101, "privilege_id": 15 }, 
+    { "menuitem_id": 95, "privilege_id": 16 },  
+    { "menuitem_id": 5, "privilege_id": 17 },   
+    { "menuitem_id": 4, "privilege_id": 17 },   
+    { "menuitem_id": 17, "privilege_id": 17 },  
+    { "menuitem_id": 18, "privilege_id": 17 },  
+    { "menuitem_id": 19, "privilege_id": 17 },  
+    { "menuitem_id": 67, "privilege_id": 17 },  
+    { "menuitem_id": 69, "privilege_id": 17 },  
+    { "menuitem_id": 52, "privilege_id": 17 },  
+    { "menuitem_id": 53, "privilege_id": 17 },  
+    { "menuitem_id": 22, "privilege_id": 17 },  
+    { "menuitem_id": 23, "privilege_id": 17 },  
+    { "menuitem_id": 24, "privilege_id": 17 },  
+    { "menuitem_id": 25, "privilege_id": 17 },  
+    { "menuitem_id": 26, "privilege_id": 17 },  
+    { "menuitem_id": 2, "privilege_id": 17 },   
+    { "menuitem_id": 3, "privilege_id": 17 },   
+    { "menuitem_id": 50, "privilege_id": 17 },  
+    { "menuitem_id": 12, "privilege_id": 17 },  
+    { "menuitem_id": 6, "privilege_id": 17 },   
+    { "menuitem_id": 8, "privilege_id": 17 },   
+    { "menuitem_id": 9, "privilege_id": 17 },   
+    { "menuitem_id": 10, "privilege_id": 17 },  
+    { "menuitem_id": 11, "privilege_id": 17 },  
+    { "menuitem_id": 7, "privilege_id": 17 },   
+    { "menuitem_id": 13, "privilege_id": 17 },  
+    { "menuitem_id": 14, "privilege_id": 17 },  
+    { "menuitem_id": 48, "privilege_id": 17 },  
+    { "menuitem_id": 31, "privilege_id": 17 },  
+    { "menuitem_id": 28, "privilege_id": 17 },  
+    { "menuitem_id": 46, "privilege_id": 17 },  
+    { "menuitem_id": 112, "privilege_id": 17 }, 
+    { "menuitem_id": 72, "privilege_id": 17 },  
+    { "menuitem_id": 38, "privilege_id": 17 },  
+    { "menuitem_id": 43, "privilege_id": 17 },  
+    { "menuitem_id": 15, "privilege_id": 17 },   
+    { "menuitem_id": 80, "privilege_id": 17 },   
+    { "menuitem_id": 110, "privilege_id": 17 },  
+    { "menuitem_id": 61, "privilege_id": 17 },   
+    { "menuitem_id": 104, "privilege_id": 17 },
+    { "menuitem_id": 47, "privilege_id": 17 }, 
+    { "menuitem_id": 61, "privilege_id": 18 },  
+    { "menuitem_id": 72, "privilege_id": 19 },  
+    { "menuitem_id": 58, "privilege_id": 19 },  
+    { "menuitem_id": 111, "privilege_id": 20 }, 
+    { "menuitem_id": 43, "privilege_id": 21 },  
+    { "menuitem_id": 46, "privilege_id": 21 },  
+    { "menuitem_id": 28, "privilege_id": 21 }, 
+    { "menuitem_id": 48, "privilege_id": 21 }, 
+    { "menuitem_id": 50, "privilege_id": 21 }, 
+    { "menuitem_id": 72, "privilege_id": 23 }, 
+    { "menuitem_id": 58, "privilege_id": 24 },  
+    { "menuitem_id": 61, "privilege_id": 25 }, 
+    { "menuitem_id": 104, "privilege_id": 26 },
+    { "menuitem_id": 115, "privilege_id": 27 }, 
+    { "menuitem_id": 46, "privilege_id": 29 },  
+    { "menuitem_id": 87, "privilege_id": 30 },  
+    { "menuitem_id": 91, "privilege_id": 31 },  
+    { "menuitem_id": 107, "privilege_id": 32 },
+    { "menuitem_id": 61, "privilege_id": 33 }, 
+    { "menuitem_id": 61, "privilege_id": 34 },  
+    { "menuitem_id": 15, "privilege_id": 34 },  
+    { "menuitem_id": 80, "privilege_id": 34 },  
+    { "menuitem_id": 110, "privilege_id": 34 }, 
+    { "menuitem_id": 104, "privilege_id": 34 }, 
+    { "menuitem_id": 72, "privilege_id": 34 },  
+    { "menuitem_id": 112, "privilege_id": 34 }, 
+    { "menuitem_id": 43, "privilege_id": 34 },  
+    { "menuitem_id": 38, "privilege_id": 34 },  
+    { "menuitem_id": 46, "privilege_id": 34 },  
+    { "menuitem_id": 48, "privilege_id": 34 },  
+    { "menuitem_id": 31, "privilege_id": 34 },  
+    { "menuitem_id": 28, "privilege_id": 34 },  
+    { "menuitem_id": 14, "privilege_id": 34 },  
+    { "menuitem_id": 13, "privilege_id": 34 },  
+    { "menuitem_id": 7, "privilege_id": 34 },   
+    { "menuitem_id": 8, "privilege_id": 34 },   
+    { "menuitem_id": 9, "privilege_id": 34 },   
+    { "menuitem_id": 11, "privilege_id": 34 },  
+    { "menuitem_id": 10, "privilege_id": 34 },  
+    { "menuitem_id": 12, "privilege_id": 34 },  
+    { "menuitem_id": 50, "privilege_id": 34 },  
+    { "menuitem_id": 6, "privilege_id": 34 },  
+    { "menuitem_id": 3, "privilege_id": 34 },  
+    { "menuitem_id": 2, "privilege_id": 34 },  
+    { "menuitem_id": 115, "privilege_id": 34 },
+    { "menuitem_id": 5, "privilege_id": 34 },  
+    { "menuitem_id": 4, "privilege_id": 34 },  
+    { "menuitem_id": 18, "privilege_id": 34 }, 
+    { "menuitem_id": 17, "privilege_id": 34 }, 
+    { "menuitem_id": 47, "privilege_id": 34 }, 
+    { "menuitem_id": 53, "privilege_id": 34 }, 
+    { "menuitem_id": 56, "privilege_id": 34 },  
+    { "menuitem_id": 69, "privilege_id": 34 }, 
+    { "menuitem_id": 52, "privilege_id": 34 }, 
+    { "menuitem_id": 1, "privilege_id": 34 },  
+    { "menuitem_id": 71, "privilege_id": 34 }, 
+    { "menuitem_id": 67, "privilege_id": 34 }, 
+    { "menuitem_id": 51, "privilege_id": 34 }, 
+    { "menuitem_id": 19, "privilege_id": 34 },  
+    { "menuitem_id": 25, "privilege_id": 34 }, 
+    { "menuitem_id": 26, "privilege_id": 34 }, 
+    { "menuitem_id": 72, "privilege_id": 35 }, 
+    { "menuitem_id": 61, "privilege_id": 35 }, 
+    { "menuitem_id": 83, "privilege_id": 36 },  
+    { "menuitem_id": 83, "privilege_id": 37 },  
+    { "menuitem_id": 104, "privilege_id": 38 },
+    { "menuitem_id": 71, "privilege_id": 39 }, 
+    { "menuitem_id": 31, "privilege_id": 40 }, 
+    { "menuitem_id": 43, "privilege_id": 40 }, 
+    { "menuitem_id": 83, "privilege_id": 41 },  
+    { "menuitem_id": 83, "privilege_id": 42 },  
+    { "menuitem_id": 99, "privilege_id": 9 },   
+    { "menuitem_id": 43, "privilege_id": 43 },  
+    { "menuitem_id": 31, "privilege_id": 43 }, 
+    { "menuitem_id": 111, "privilege_id": 44 }, 
+    { "menuitem_id": 100, "privilege_id": 45 },
+    { "menuitem_id": 104, "privilege_id": 46 },
+    { "menuitem_id": 104, "privilege_id": 47 },
+    { "menuitem_id": 86, "privilege_id": 48 }, 
+    { "menuitem_id": 72, "privilege_id": 49 }, 
+    { "menuitem_id": 77, "privilege_id": 50 }, 
+    { "menuitem_id": 97, "privilege_id": 51 },
+    { "menuitem_id": 72, "privilege_id": 49 },
+    { "menuitem_id": 77, "privilege_id": 50 }, 
+    { "menuitem_id": 97, "privilege_id": 51 } ]
 
 }
 
@@ -562,12 +588,7 @@ Authorization: {{authorization}}
 }
 
 ############################## get services
-GET {{host}}/definitions/services?page=1&limit=1
-Content-Type: application/json
-Authorization: {{authorization}}
-
-############################## get all dropdown
-GET {{host}}/definitions/all-dropdowns
+GET {{host}}/definitions/services?page=1&limit=1&department_id=1&start_date=2023-01-01
 Content-Type: application/json
 Authorization: {{authorization}}
 lang:en
@@ -584,13 +605,13 @@ Authorization: {{authorization}}
   "project_id": 2
 }
 
-############################ create usertypes 
-POST {{host}}/definitions/user-types
+############################ create employee types 
+POST {{host}}/definitions/employee-types
 Content-Type: application/json
 Authorization: {{authorization}}
 
 {
-  "userTypes": [
+  "employee_types": [
     { "en_name": "Master Account", "ar_name": "حساب رئيسي", "project_id": 1 },
     { "en_name": "HOD", "ar_name": "رئيس قسم", "project_id": 1 },
     { "en_name": "Dispatcher", "ar_name": "الموزع", "project_id": 1 },
@@ -613,3 +634,255 @@ Authorization: {{authorization}}
     { "en_name": "IT Manager", "ar_name": "مدير تكنولوجيا المعلومات", "project_id": 2 }
   ]
 }
+
+
+############################ create location types
+POST {{host}}/definitions/location-types
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "location_types": [
+    //{ "en_name": "Master Account", "ar_name": "حساب رئيسي", "project_id": 1 }
+    { "en_name": "Sector", "ar_name": "قطاع" },
+    { "en_name": "Zone", "ar_name": "منطقة" },
+    { "en_name": "Tower", "ar_name": "برج" },
+    { "en_name": "Project", "ar_name": "مشروع" }
+  ]
+}
+
+
+################################# create locations
+POST {{host}}/definitions/locations
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "locations": [
+    // { "en_name": "Sector 1", "ar_name": "القطاع 1", "location_type_id": 1, "project_id": 3, "parent_location_id": 1, "location_code": "2312" },
+    { "en_name": "GENERAL", "ar_name": "عام", "location_type_id": 1, "location_code": "1019", "parent_location_id": 1 },
+    { "en_name": "Platinum", "ar_name": "بلاتينيوم", "location_type_id": 1, "location_code": "1020", "parent_location_id": 1 },
+    { "en_name": "panoramica", "ar_name": "بانوراميكا", "location_type_id": 1, "location_code": "1021", "parent_location_id": 1 }
+  ]
+}
+
+
+############################ create rental companies
+POST {{host}}/definitions/rental-companies
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "rental_companies": [
+    //{ "en_name": "Master Account", "ar_name": "حساب رئيسي", "rental_company_code": "123s", "project_id": 1 }
+    { "en_name": "Royal", "ar_name": "رويال", "rental_company_code": "0001" },
+    { "en_name": "Alhawari Group", "ar_name": "الهوارى جروب", "rental_company_code": "0002" },
+    { "en_name": "Crown", "ar_name": "كوين", "rental_company_code": "0003" },
+    { "en_name": "Princess", "ar_name": "برنسيس", "rental_company_code": "0004" },
+    { "en_name": "Brinz", "ar_name": "بريزنتيشن", "rental_company_code": "0005" },
+    { "en_name": "Sunway", "ar_name": "سنوى", "rental_company_code": "0006" },
+    { "en_name": "Students from the owner", "ar_name": "طلاب من المالك", "rental_company_code": "0007" },
+    { "en_name": "Exit from the rental system", "ar_name": "خروج من المنظومة الإيجارية", "rental_company_code": "0008" }
+  ]
+}
+
+############################## create unit types
+POST {{host}}/definitions/unit-types
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "unit_types": [
+    //{ "en_name": "Villa", "ar_name": "فيلا", "project_id": 1 }
+    { "en_name": "Villa", "ar_name": "فيلا" },
+    { "en_name": "Studio", "ar_name": "استوديو" },
+    { "en_name": "Apartment", "ar_name": "شقة" },
+    { "en_name": "Penthouse", "ar_name": "بنتهاوس" },
+    { "en_name": "Shop", "ar_name": "محل" },
+    { "en_name": "High Street", "ar_name": "الشارع الرئيسي" }
+  ]
+}
+
+####################### Create Countries
+POST {{host}}/definitions/countries
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "countries": [
+    { "en_name": "Egypt", "ar_name": "مصر", "en_nationality": "Egyptian", "ar_nationality": "مصري", "country_code": "EG", "phone_code": "+20" },
+    { "en_name": "Saudi Arabia", "ar_name": "السعودية", "en_nationality": "Saudi", "ar_nationality": "سعودي", "country_code": "SA", "phone_code": "+966" },
+    { "en_name": "Afghanistan", "ar_name": "أفغانستان", "en_nationality": "Afghan", "ar_nationality": "أفغاني", "country_code": "AF", "phone_code": "+93" },
+    { "en_name": "Albania", "ar_name": "ألبانيا", "en_nationality": "Albanian", "ar_nationality": "ألباني", "country_code": "AL", "phone_code": "+355" },
+    { "en_name": "Algeria", "ar_name": "الجزائر", "en_nationality": "Algerian", "ar_nationality": "جزائري", "country_code": "DZ", "phone_code": "+213" },
+    { "en_name": "Argentina", "ar_name": "الأرجنتين", "en_nationality": "Argentine", "ar_nationality": "أرجنتيني", "country_code": "AR", "phone_code": "+54" },
+    { "en_name": "Australia", "ar_name": "أستراليا", "en_nationality": "Australian", "ar_nationality": "أسترالي", "country_code": "AU", "phone_code": "+61" },
+    { "en_name": "Austria", "ar_name": "النمسا", "en_nationality": "Austrian", "ar_nationality": "نمساوي", "country_code": "AT", "phone_code": "+43" },
+    { "en_name": "Bangladesh", "ar_name": "بنغلاديش", "en_nationality": "Bangladeshi", "ar_nationality": "بنغلاديشي", "country_code": "BD", "phone_code": "+880" },
+    { "en_name": "Belgium", "ar_name": "بلجيكا", "en_nationality": "Belgian", "ar_nationality": "بلجيكي", "country_code": "BE", "phone_code": "+32" },
+    { "en_name": "Bolivia", "ar_name": "بوليفيا", "en_nationality": "Bolivian", "ar_nationality": "بوليفي", "country_code": "BO", "phone_code": "+591" },
+    { "en_name": "Botswana", "ar_name": "بوتسوانا", "en_nationality": "Batswana", "ar_nationality": "بوتسواني", "country_code": "BW", "phone_code": "+267" },
+    { "en_name": "Brazil", "ar_name": "البرازيل", "en_nationality": "Brazilian", "ar_nationality": "برازيلي", "country_code": "BR", "phone_code": "+55" },
+    { "en_name": "Bulgaria", "ar_name": "بلغاريا", "en_nationality": "Bulgarian", "ar_nationality": "بلغاري", "country_code": "BG", "phone_code": "+359" },
+    { "en_name": "Cambodia", "ar_name": "كمبوديا", "en_nationality": "Cambodian", "ar_nationality": "كمبودي", "country_code": "KH", "phone_code": "+855" },
+    { "en_name": "Cameroon", "ar_name": "الكاميرون", "en_nationality": "Cameroonian", "ar_nationality": "كاميروني", "country_code": "CM", "phone_code": "+237" },
+    { "en_name": "Canada", "ar_name": "كندا", "en_nationality": "Canadian", "ar_nationality": "كندي", "country_code": "CA", "phone_code": "+1" },
+    { "en_name": "Chile", "ar_name": "تشيلي", "en_nationality": "Chilean", "ar_nationality": "تشيلي", "country_code": "CL", "phone_code": "+56" },
+    { "en_name": "China", "ar_name": "الصين", "en_nationality": "Chinese", "ar_nationality": "صيني", "country_code": "CN", "phone_code": "+86" },
+    { "en_name": "Colombia", "ar_name": "كولومبيا", "en_nationality": "Colombian", "ar_nationality": "كولومبي", "country_code": "CO", "phone_code": "+57" },
+    { "en_name": "Costa Rica", "ar_name": "كوستاريكا", "en_nationality": "Costa Rican", "ar_nationality": "كوستاريكي", "country_code": "CR", "phone_code": "+506" },
+    { "en_name": "Croatia", "ar_name": "كرواتيا", "en_nationality": "Croatian", "ar_nationality": "كرواتي", "country_code": "HR", "phone_code": "+385" },
+    { "en_name": "Cuba", "ar_name": "كوبا", "en_nationality": "Cuban", "ar_nationality": "كوبي", "country_code": "CU", "phone_code": "+53" },
+    { "en_name": "Czech Republic", "ar_name": "التشيك", "en_nationality": "Czech", "ar_nationality": "تشيكي", "country_code": "CZ", "phone_code": "+420" },
+    { "en_name": "Denmark", "ar_name": "الدنمارك", "en_nationality": "Danish", "ar_nationality": "دنماركي", "country_code": "DK", "phone_code": "+45" },
+    { "en_name": "Dominican Republic", "ar_name": "جمهورية الدومينيكان", "en_nationality": "Dominican", "ar_nationality": "دومينيكاني", "country_code": "DO", "phone_code": "+1-809" },
+    { "en_name": "Ecuador", "ar_name": "الإكوادور", "en_nationality": "Ecuadorian", "ar_nationality": "إكوادوري", "country_code": "EC", "phone_code": "+593" },
+    { "en_name": "El Salvador", "ar_name": "السلفادور", "en_nationality": "Salvadorian", "ar_nationality": "سلفادوري", "country_code": "SV", "phone_code": "+503" },
+    { "en_name": "England", "ar_name": "إنجلترا", "en_nationality": "English", "ar_nationality": "إنجليزي", "country_code": "GB", "phone_code": "+44" },
+    { "en_name": "Estonia", "ar_name": "إستونيا", "en_nationality": "Estonian", "ar_nationality": "إستوني", "country_code": "EE", "phone_code": "+372" },
+    { "en_name": "Ethiopia", "ar_name": "إثيوبيا", "en_nationality": "Ethiopian", "ar_nationality": "إثيوبي", "country_code": "ET", "phone_code": "+251" },
+    { "en_name": "Fiji", "ar_name": "فيجي", "en_nationality": "Fijian", "ar_nationality": "فيجي", "country_code": "FJ", "phone_code": "+679" },
+    { "en_name": "Finland", "ar_name": "فنلندا", "en_nationality": "Finnish", "ar_nationality": "فنلندي", "country_code": "FI", "phone_code": "+358" },
+    { "en_name": "France", "ar_name": "فرنسا", "en_nationality": "French", "ar_nationality": "فرنسي", "country_code": "FR", "phone_code": "+33" },
+    { "en_name": "Germany", "ar_name": "ألمانيا", "en_nationality": "German", "ar_nationality": "ألماني", "country_code": "DE", "phone_code": "+49" },
+    { "en_name": "Ghana", "ar_name": "غانا", "en_nationality": "Ghanaian", "ar_nationality": "غاني", "country_code": "GH", "phone_code": "+233" },
+    { "en_name": "Greece", "ar_name": "اليونان", "en_nationality": "Greek", "ar_nationality": "يوناني", "country_code": "GR", "phone_code": "+30" },
+    { "en_name": "Guatemala", "ar_name": "غواتيمالا", "en_nationality": "Guatemalan", "ar_nationality": "غواتيمالي", "country_code": "GT", "phone_code": "+502" },
+    { "en_name": "Haiti", "ar_name": "هايتي", "en_nationality": "Haitian", "ar_nationality": "هايتي", "country_code": "HT", "phone_code": "+509" },
+    { "en_name": "Honduras", "ar_name": "هندوراس", "en_nationality": "Honduran", "ar_nationality": "هندوراسي", "country_code": "HN", "phone_code": "+504" },
+    { "en_name": "Hungary", "ar_name": "المجر", "en_nationality": "Hungarian", "ar_nationality": "مجري", "country_code": "HU", "phone_code": "+36" },
+    { "en_name": "Iceland", "ar_name": "آيسلندا", "en_nationality": "Icelandic", "ar_nationality": "آيسلندي", "country_code": "IS", "phone_code": "+354" },
+    { "en_name": "India", "ar_name": "الهند", "en_nationality": "Indian", "ar_nationality": "هندي", "country_code": "IN", "phone_code": "+91" },
+    { "en_name": "Indonesia", "ar_name": "إندونيسيا", "en_nationality": "Indonesian", "ar_nationality": "إندونيسي", "country_code": "ID", "phone_code": "+62" },
+    { "en_name": "Iran", "ar_name": "إيران", "en_nationality": "Iranian", "ar_nationality": "إيراني", "country_code": "IR", "phone_code": "+98" },
+    { "en_name": "Iraq", "ar_name": "العراق", "en_nationality": "Iraqi", "ar_nationality": "عراقي", "country_code": "IQ", "phone_code": "+964" },
+    { "en_name": "Ireland", "ar_name": "أيرلندا", "en_nationality": "Irish", "ar_nationality": "أيرلندي", "country_code": "IE", "phone_code": "+353" },
+    { "en_name": "Israel", "ar_name": "إسرائيل", "en_nationality": "Israeli", "ar_nationality": "إسرائيلي", "country_code": "IL", "phone_code": "+972" },
+    { "en_name": "Italy", "ar_name": "إيطاليا", "en_nationality": "Italian", "ar_nationality": "إيطالي", "country_code": "IT", "phone_code": "+39" },
+    { "en_name": "Jamaica", "ar_name": "جامايكا", "en_nationality": "Jamaican", "ar_nationality": "جامايكي", "country_code": "JM", "phone_code": "+1-876" },
+    { "en_name": "Japan", "ar_name": "اليابان", "en_nationality": "Japanese", "ar_nationality": "ياباني", "country_code": "JP", "phone_code": "+81" },
+    { "en_name": "Jordan", "ar_name": "الأردن", "en_nationality": "Jordanian", "ar_nationality": "أردني", "country_code": "JO", "phone_code": "+962" },
+    { "en_name": "Kenya", "ar_name": "كينيا", "en_nationality": "Kenyan", "ar_nationality": "كيني", "country_code": "KE", "phone_code": "+254" },
+    { "en_name": "Kuwait", "ar_name": "الكويت", "en_nationality": "Kuwaiti", "ar_nationality": "كويتي", "country_code": "KW", "phone_code": "+965" },
+    { "en_name": "Laos", "ar_name": "لاوس", "en_nationality": "Lao", "ar_nationality": "لاوسي", "country_code": "LA", "phone_code": "+856" },
+    { "en_name": "Latvia", "ar_name": "لاتفيا", "en_nationality": "Latvian", "ar_nationality": "لاتفي", "country_code": "LV", "phone_code": "+371" },
+    { "en_name": "Lebanon", "ar_name": "لبنان", "en_nationality": "Lebanese", "ar_nationality": "لبناني", "country_code": "LB", "phone_code": "+961" },
+    { "en_name": "Libya", "ar_name": "ليبيا", "en_nationality": "Libyan", "ar_nationality": "ليبي", "country_code": "LY", "phone_code": "+218" },
+    { "en_name": "Lithuania", "ar_name": "ليتوانيا", "en_nationality": "Lithuanian", "ar_nationality": "ليتواني", "country_code": "LT", "phone_code": "+370" },
+    { "en_name": "Madagascar", "ar_name": "مدغشقر", "en_nationality": "Malagasy", "ar_nationality": "مدغشقري", "country_code": "MG", "phone_code": "+261" },
+    { "en_name": "Malaysia", "ar_name": "ماليزيا", "en_nationality": "Malaysian", "ar_nationality": "ماليزي", "country_code": "MY", "phone_code": "+60" },
+    { "en_name": "Mali", "ar_name": "مالي", "en_nationality": "Malian", "ar_nationality": "مالي", "country_code": "ML", "phone_code": "+223" },
+    { "en_name": "Malta", "ar_name": "مالطا", "en_nationality": "Maltese", "ar_nationality": "مالطي", "country_code": "MT", "phone_code": "+356" },
+    { "en_name": "Mexico", "ar_name": "المكسيك", "en_nationality": "Mexican", "ar_nationality": "مكسيكي", "country_code": "MX", "phone_code": "+52" },
+    { "en_name": "Mongolia", "ar_name": "منغوليا", "en_nationality": "Mongolian", "ar_nationality": "منغولي", "country_code": "MN", "phone_code": "+976" },
+    { "en_name": "Morocco", "ar_name": "المغرب", "en_nationality": "Moroccan", "ar_nationality": "مغربي", "country_code": "MA", "phone_code": "+212" },
+    { "en_name": "Mozambique", "ar_name": "موزمبيق", "en_nationality": "Mozambican", "ar_nationality": "موزمبيقي", "country_code": "MZ", "phone_code": "+258" },
+    { "en_name": "Namibia", "ar_name": "ناميبيا", "en_nationality": "Namibian", "ar_nationality": "ناميبي", "country_code": "NA", "phone_code": "+264" },
+    { "en_name": "Nepal", "ar_name": "نيبال", "en_nationality": "Nepalese", "ar_nationality": "نيبالي", "country_code": "NP", "phone_code": "+977" },
+    { "en_name": "Netherlands", "ar_name": "هولندا", "en_nationality": "Dutch", "ar_nationality": "هولندي", "country_code": "NL", "phone_code": "+31" },
+    { "en_name": "New Zealand", "ar_name": "نيوزيلندا", "en_nationality": "New Zealander", "ar_nationality": "نيوزيلندي", "country_code": "NZ", "phone_code": "+64" },
+    { "en_name": "Nicaragua", "ar_name": "نيكاراغوا", "en_nationality": "Nicaraguan", "ar_nationality": "نيكاراغوي", "country_code": "NI", "phone_code": "+505" },
+    { "en_name": "Nigeria", "ar_name": "نيجيريا", "en_nationality": "Nigerian", "ar_nationality": "نيجيري", "country_code": "NG", "phone_code": "+234" },
+    { "en_name": "Norway", "ar_name": "النرويج", "en_nationality": "Norwegian", "ar_nationality": "نرويجي", "country_code": "NO", "phone_code": "+47" },
+    { "en_name": "Pakistan", "ar_name": "باكستان", "en_nationality": "Pakistani", "ar_nationality": "باكس��اني", "country_code": "PK", "phone_code": "+92" },
+    { "en_name": "Panama", "ar_name": "بنما", "en_nationality": "Panamanian", "ar_nationality": "بنمي", "country_code": "PA", "phone_code": "+507" },
+    { "en_name": "Paraguay", "ar_name": "باراغواي", "en_nationality": "Paraguayan", "ar_nationality": "باراغوي", "country_code": "PY", "phone_code": "+595" },
+    { "en_name": "Peru", "ar_name": "بيرو", "en_nationality": "Peruvian", "ar_nationality": "بيروفي", "country_code": "PE", "phone_code": "+51" },
+    { "en_name": "Philippines", "ar_name": "الفلبين", "en_nationality": "Filipino", "ar_nationality": "فلبيني", "country_code": "PH", "phone_code": "+63" },
+    { "en_name": "Poland", "ar_name": "بولندا", "en_nationality": "Polish", "ar_nationality": "بولندي", "country_code": "PL", "phone_code": "+48" },
+    { "en_name": "Portugal", "ar_name": "البرتغال", "en_nationality": "Portuguese", "ar_nationality": "برتغالي", "country_code": "PT", "phone_code": "+351" },
+    { "en_name": "Romania", "ar_name": "رومانيا", "en_nationality": "Romanian", "ar_nationality": "روماني", "country_code": "RO", "phone_code": "+40" },
+    { "en_name": "Russia", "ar_name": "روسيا", "en_nationality": "Russian", "ar_nationality": "روسي", "country_code": "RU", "phone_code": "+7" },
+    { "en_name": "Scotland", "ar_name": "اسكتلندا", "en_nationality": "Scottish", "ar_nationality": "اسكتلندي", "country_code": "GB", "phone_code": "+44" },
+    { "en_name": "Senegal", "ar_name": "السنغال", "en_nationality": "Senegalese", "ar_nationality": "سنغالي", "country_code": "SN", "phone_code": "+221" },
+    { "en_name": "Serbia", "ar_name": "صربيا", "en_nationality": "Serbian", "ar_nationality": "صربي", "country_code": "RS", "phone_code": "+381" },
+    { "en_name": "Singapore", "ar_name": "سنغافورة", "en_nationality": "Singaporean", "ar_nationality": "سنغافوري", "country_code": "SG", "phone_code": "+65" },
+    { "en_name": "Slovakia", "ar_name": "سلوفاكيا", "en_nationality": "Slovak", "ar_nationality": "سلوفاكي", "country_code": "SK", "phone_code": "+421" },
+    { "en_name": "South Africa", "ar_name": "جنوب أفريقيا", "en_nationality": "South African", "ar_nationality": "جنوب أفريقي", "country_code": "ZA", "phone_code": "+27" },
+    { "en_name": "South Korea", "ar_name": "كوريا الجنوبية", "en_nationality": "Korean", "ar_nationality": "كوري", "country_code": "KR", "phone_code": "+82" },
+    { "en_name": "Spain", "ar_name": "إسبانيا", "en_nationality": "Spanish", "ar_nationality": "إسباني", "country_code": "ES", "phone_code": "+34" },
+    { "en_name": "Sri Lanka", "ar_name": "سريلانكا", "en_nationality": "Sri Lankan", "ar_nationality": "سريلانكي", "country_code": "LK", "phone_code": "+94" },
+    { "en_name": "Sudan", "ar_name": "السودان", "en_nationality": "Sudanese", "ar_nationality": "سوداني", "country_code": "SD", "phone_code": "+249" },
+    { "en_name": "Sweden", "ar_name": "السويد", "en_nationality": "Swedish", "ar_nationality": "سويدي", "country_code": "SE", "phone_code": "+46" },
+    { "en_name": "Switzerland", "ar_name": "سويسرا", "en_nationality": "Swiss", "ar_nationality": "سويسري", "country_code": "CH", "phone_code": "+41" },
+    { "en_name": "Syria", "ar_name": "سوريا", "en_nationality": "Syrian", "ar_nationality": "سوري", "country_code": "SY", "phone_code": "+963" },
+    { "en_name": "Taiwan", "ar_name": "تايوان", "en_nationality": "Taiwanese", "ar_nationality": "تايواني", "country_code": "TW", "phone_code": "+886" },
+    { "en_name": "Tajikistan", "ar_name": "طاجيكستان", "en_nationality": "Tajikistani", "ar_nationality": "طاجيكي", "country_code": "TJ", "phone_code": "+992" },
+    { "en_name": "Thailand", "ar_name": "تايلاند", "en_nationality": "Thai", "ar_nationality": "تايلاندي", "country_code": "TH", "phone_code": "+66" },
+    { "en_name": "Tonga", "ar_name": "تونغا", "en_nationality": "Tongan", "ar_nationality": "تونغي", "country_code": "TO", "phone_code": "+676" },
+    { "en_name": "Tunisia", "ar_name": "تونس", "en_nationality": "Tunisian", "ar_nationality": "تونسي", "country_code": "TN", "phone_code": "+216" },
+    { "en_name": "Turkey", "ar_name": "تركيا", "en_nationality": "Turkish", "ar_nationality": "تركي", "country_code": "TR", "phone_code": "+90" },
+    { "en_name": "Ukraine", "ar_name": "أوكرانيا", "en_nationality": "Ukrainian", "ar_nationality": "أوكراني", "country_code": "UA", "phone_code": "+380" },
+    { "en_name": "United Arab Emirates", "ar_name": "الإمارات العربية المتحدة", "en_nationality": "Emirati", "ar_nationality": "إماراتي", "country_code": "AE", "phone_code": "+971" },
+    { "en_name": "United Kingdom", "ar_name": "المملكة المتحدة", "en_nationality": "British", "ar_nationality": "بريطاني", "country_code": "GB", "phone_code": "+44" },
+    { "en_name": "United States", "ar_name": "الولايات المتحدة", "en_nationality": "American", "ar_nationality": "أمريكي", "country_code": "US", "phone_code": "+1" },
+    { "en_name": "Uruguay", "ar_name": "أوروغواي", "en_nationality": "Uruguayan", "ar_nationality": "أوروغوياني", "country_code": "UY", "phone_code": "+598" },
+    { "en_name": "Venezuela", "ar_name": "فنزويلا", "en_nationality": "Venezuelan", "ar_nationality": "فنزويلي", "country_code": "VE", "phone_code": "+58" },
+    { "en_name": "Vietnam", "ar_name": "فيتنام", "en_nationality": "Vietnamese", "ar_nationality": "فيتنامي", "country_code": "VN", "phone_code": "+84" },
+    { "en_name": "Wales", "ar_name": "ويلز", "en_nationality": "Welsh", "ar_nationality": "ويلزي", "country_code": "GB", "phone_code": "+44" },
+    { "en_name": "Zambia", "ar_name": "زامبيا", "en_nationality": "Zambian", "ar_nationality": "زامبي", "country_code": "ZM", "phone_code": "+260" },
+    { "en_name": "Zimbabwe", "ar_name": "زيمبابوي", "en_nationality": "Zimbabwean", "ar_nationality": "زيمبابوي", "country_code": "ZW", "phone_code": "+263" }
+  ]
+}
+
+########################### create customer id types
+POST {{host}}/definitions/id-types
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "customer_id_types" : [
+    { "en_name": "Passport", "ar_name": "جواز سفر" },
+    { "en_name": "National ID", "ar_name": "بطاقة شخصية" }
+  ]
+}
+
+########################### create religions
+POST {{host}}/definitions/religions
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "religions" : [
+    { "en_name": "Muslim", "ar_name": "مسلم" },
+    { "en_name": "Christian", "ar_name": "مسيحي" },
+    { "en_name": "Other", "ar_name": "أخرى" }
+  ]
+}
+
+########################### create marital statuses
+POST {{host}}/definitions/marital-statuses
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "marital_statuses" : [
+    { "en_name": "Single", "ar_name": "أعزب" },
+    { "en_name": "Married", "ar_name": "متزوج" },
+    { "en_name": "Divorced", "ar_name": "مطلق" },
+    { "en_name": "Widowed", "ar_name": "أرمل" },
+    { "en_name": "Other", "ar_name": "أخرى" }
+  ]
+}
+
+########################## Create customer types
+POST {{host}}/definitions/customer-types
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "customer_types" : [
+    { "en_name": "VIP", "ar_name": "شخصية هامة" },
+    { "en_name": "Normal", "ar_name": "عادي" },
+    { "en_name": "Trouble Maker", "ar_name": "مثير للمشاكل" }
+  ]
+}
+
+############################## get all dropdown
+GET {{host}}/definitions/all-dropdowns
+Content-Type: application/json
+Authorization: {{authorization}}
+lang:en
+
+
+

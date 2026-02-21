@@ -1,4 +1,4 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler, BadRequestException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { languageEnums } from '../enums/shared.enum';
 
@@ -14,9 +14,10 @@ export class LanguageInterceptor implements NestInterceptor {
       request.body?.lang;
       
       // Fallback to default if none provided
-      if (!lang) {
-        lang = languageEnums.ENGLISH;
-      }
+     if (lang && (lang.toLowerCase() !== languageEnums.ENGLISH && lang.toLowerCase() !== languageEnums.ARABIC))
+        throw new BadRequestException('Invalid language. Supported values are "en" and "ar".');
+      
+     if (!lang) lang = languageEnums.ENGLISH;
       
       // Attach normalized language back to request
       request.lang = lang;
