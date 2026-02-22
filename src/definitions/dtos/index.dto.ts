@@ -18,6 +18,7 @@ import { CreateMaritalStatusesDto } from "./create_marital_statuses";
 import { CreateCustomerTypesDto } from "./create_customer_types.dto";
 import { ServiceSearchDto } from "./service-search.dto";
 import { CreateMenuitemsDto } from "./create-menuitems.dto";
+import { CreateOwnershipTypesDto } from "./create_ownership_types.dto";
 
 export {
   CreateLocationTypesDto,
@@ -39,5 +40,6 @@ export {
   CreateMaritalStatusesDto,
   CreateCustomerTypesDto,
   ServiceSearchDto,
-  CreateMenuitemsDto
+  CreateMenuitemsDto,
+  CreateOwnershipTypesDto
 }

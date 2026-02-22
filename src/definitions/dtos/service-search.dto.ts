@@ -2,7 +2,7 @@ import { Type } from 'class-transformer';
 import { IsString, IsOptional, IsIn, IsInt } from 'class-validator';
 
 export class ServiceSearchDto {
-  @IsString()
+  @IsInt()
   @IsOptional()
   @Type(() => Number)
   service_id: number;
@@ -16,12 +16,12 @@ export class ServiceSearchDto {
   @Type(() => Number)
   department_id: number;
 
-  @IsString()
+  @IsInt()
   @IsOptional()
   @Type(() => Number)
   is_active: number;
 
-  @IsString()
+  @IsInt()
   @IsOptional()
   @Type(() => Number)
   show_in_mobile: number;

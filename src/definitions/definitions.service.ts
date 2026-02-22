@@ -2,8 +2,8 @@ import { BadRequestException, ConflictException, Injectable, InternalServerError
 import { activeStatusEnums, genderEnums, isDeleteStatusEnums, languageEnums, projectEnums, promiseStatusEnums, superAdminEnums } from 'src/common/enums/shared.enum';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from 'src/generated/postgres/prisma/client';
-import * as dtos from './dtos/index.dto';
 import { HelperService } from 'src/helper/helper.service';
+import * as dtos from './dtos/index.dto';
 import type * as interfaces from 'src/common/interfaces/index.interfaces';
 
 @Injectable()
@@ -373,6 +373,7 @@ export class DefinitionsService {
   async getServices(user: interfaces.User, pagination: interfaces.Pagination, language: string, filter: dtos.ServiceSearchDto) {
     const services = await this.prisma.services.findMany({
       where: {
+        id: filter.service_id,
         is_deleted: isDeleteStatusEnums.NOT_DELETED,
         [`${language}_name`]: { contains: filter.service_name, mode: 'insensitive' },
         is_active: filter.is_active,
@@ -407,6 +408,7 @@ export class DefinitionsService {
 
     const totalCount = await this.prisma.services.count({
       where: {
+        id: filter.service_id,
         is_deleted: isDeleteStatusEnums.NOT_DELETED,
         is_active: filter.is_active,
         show_in_mobile: filter.show_in_mobile,
@@ -603,9 +605,26 @@ export class DefinitionsService {
       }
     }
   }
+
+    async createOwnershipType(user: interfaces.User, data: dtos.CreateOwnershipTypesDto) {
+    try {
+      return this.prisma.ownership_types.createMany({ data: data.ownership_types.map(ownershipType => ({ ...ownershipType })) });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      // Unique constraint violation
+        if (error.code === "P2002") {
+          throw new ConflictException(`Customer Type with name "${data}" already exists`);
+        }
+      } else if (error instanceof Prisma.PrismaClientValidationError) {
+        throw new BadRequestException("Invalid data provided");
+      }
+    }
+  }
+
+
   async getAllDropDowns(user: interfaces.User, language: string) {
     const [menuitems, privileges, departments, positions, safes, employee_types, location_types, locations, rental_companies, unit_types
-      , company_projects, countries, id_types, marital_statuses, religions, customer_types
+      , company_projects, countries, id_types, marital_statuses, religions, customer_types, ownership_types
     ] = await Promise.allSettled([
       this.prisma.menuitems.findMany({ where: { is_deleted: isDeleteStatusEnums.NOT_DELETED } }),
       this.prisma.privileges.findMany({ where: { is_deleted: isDeleteStatusEnums.NOT_DELETED } }),
@@ -647,6 +666,7 @@ export class DefinitionsService {
       this.prisma.marital_statuses.findMany({}),
       this.prisma.religions.findMany({}),
       this.prisma.customer_types.findMany({}),
+      this.prisma.ownership_types.findMany({}),
     ])
 
     return {
@@ -664,6 +684,7 @@ export class DefinitionsService {
       marital_statuses: marital_statuses.status === 'fulfilled' ? marital_statuses.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
       religions: religions.status === 'fulfilled' ? religions.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
       customer_types: customer_types.status === 'fulfilled' ? customer_types.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
+      ownership_types: ownership_types.status === 'fulfilled' ? ownership_types.value.map(item => ({ id: item.id, name: item[`${language}_name`] })) : [],
       active_status: [{ id: activeStatusEnums.ACTIVE, name: language === languageEnums.ARABIC ? 'نشط' : 'Active' }, { id: activeStatusEnums.INACTIVE, name: language === languageEnums.ARABIC ? 'غير نشط' : 'Inactive' }],
       delete_status: [{ id: isDeleteStatusEnums.NOT_DELETED, name: language === languageEnums.ARABIC ? 'غير محذوف' : 'Not Deleted' }, { id: isDeleteStatusEnums.DELETED, name: language === languageEnums.ARABIC ? 'محذوف' : 'Deleted' }],
       language: [{ id: languageEnums.ENGLISH, name: 'English' }, { id: languageEnums.ARABIC, name: 'Arabic' }],

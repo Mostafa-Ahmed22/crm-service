@@ -54,19 +54,26 @@ Authorization: {{authorization}}
 }
 
 ############################## get all units  
-GET {{host}}/projects/units?page=1&limit=1&unit_number=V
+GET {{host}}/projects/units?page=1&limit=1&unit_number=555555
+# GET {{host}}/projects/units?page=1&limit=1
 Content-Type: application/json
 Authorization: {{authorization}}
 lang:en
 
 ############################## get project unit
-GET {{host}}/projects/2/units/v1
+GET {{host}}/projects/3/units/555555
 Content-Type: application/json
 # Authorization: {{authorization}}
 lang:en
 
 ############################## get projects
 GET {{host}}/projects
+Content-Type: application/json
+# Authorization: {{authorization}}
+lang:en
+
+############################# get companies
+GET {{host}}/projects/4
 Content-Type: application/json
 # Authorization: {{authorization}}
 lang:en
