@@ -60,38 +60,51 @@ export class ProjectsService {
     }
   }
 
-  async getUnits(user: interfaces.User, pagination: interfaces.Pagination, language: string, filter: string) {
+  async getUnits(user: interfaces.User, pagination: interfaces.Pagination, language: string, filter: dtos.GetUnitsDto) {
+    const { unit_specifications, ...unitData } = filter
+    const whereClause: Prisma.unitsWhereInput = {
+      project_id: unitData.project_id ? unitData.project_id : user.company_project_id,
+      unit_number: unitData.unit_number ? { contains: unitData.unit_number, mode: 'insensitive' } : undefined,
+      is_active: unitData.is_active ? unitData.is_active : undefined,
+      unit_specifications: {
+        unit_type_id: unit_specifications?.unit_type_id ? unit_specifications.unit_type_id : undefined,
+        is_furnished: unit_specifications?.is_furnished ? unit_specifications.is_furnished : undefined,
+      }
+    };
+
     const units = await this.prisma.units.findMany({
-      where: {
-        project_id: user.company_project_id, unit_number: { contains: filter, mode: 'insensitive' }
-      },
+      where: whereClause,
       include: {
         unit_specifications: {
           include: {
             unit_types: { select: { id: true, [`${language}_name`]: true } },
-            locations: { select: { id: true, [`${language}_name`]: true } }
+            locations: { include: { locations: true } },
+          }
+        },
+        customer_units: {
+          include: {
+            customers: {
+              include: {
+                customer_types: { select: { id: true, [`${language}_name`]: true } },
+                marital_statuses: { select: { id: true, [`${language}_name`]: true } },
+                religions: { select: { id: true, [`${language}_name`]: true } },
+                countries: { select: { id: true, [`${language}_name`]: true } },
+                id_types: { select: { id: true, [`${language}_name`]: true } },
+              }
+            },
+            ownership_types: { select: { id: true, [`${language}_name`]: true } }
           }
         },
         company_project: { select: { id: true, [`${language}_name`]: true } },
-        employees_units_created_byToemployees: { select: { id: true, full_name: true } },
-        employees_units_updated_byToemployees: { select: { id: true, full_name: true } },
-        employees_units_locked_byToemployees: { select: { id: true, full_name: true } },
-        employees_units_unlocked_byToemployees: { select: { id: true, full_name: true } },
       },
       skip: pagination.skip,
       take: pagination.limit,
     });
     // Get total count for pagination metadata
-    const totalCount = await this.prisma.units.count({
-      where: {
-        project_id: user.company_project_id, unit_number: { contains: filter, mode: 'insensitive' }
-      }
-    });
+    const totalCount = await this.prisma.units.count({ where: whereClause });
     // Format response
     const formattedUnits = units.map(unit => {
-      const { unit_specifications: { unit_types, locations, ...unit_specifications }, company_project,
-        employees_units_created_byToemployees, employees_units_updated_byToemployees,
-        employees_units_locked_byToemployees, employees_units_unlocked_byToemployees, ...unitRest } = unit
+      const { unit_specifications: { unit_types, locations, ...unit_specifications }, customer_units, company_project, ...unitRest } = unit
       return {
         ...unitRest,
         project_name: company_project[`${language}_name`],
@@ -99,17 +112,28 @@ export class ProjectsService {
           ...unit_specifications,
           unit_type_id: unit_types.id,
           unit_type_name: unit_types[`${language}_name`],
-          location_id: locations.id,
-          location_name: locations[`${language}_name`]
+          locations : this.helperService.buildLocationHierarchyFromFlat(locations, language)
         },
-        created_by_id: employees_units_created_byToemployees?.id,
-        created_by: employees_units_created_byToemployees?.full_name,
-        updated_by_id: employees_units_updated_byToemployees?.id,
-        updated_by: employees_units_updated_byToemployees?.full_name,
-        locked_by_id: employees_units_locked_byToemployees?.id,
-        locked_by: employees_units_locked_byToemployees?.full_name,
-        unlocked_by_id: employees_units_unlocked_byToemployees?.id,
-        unlocked_by: employees_units_unlocked_byToemployees?.full_name,
+        customer_units: customer_units.map(customer_unit => ({
+          customer_id: customer_unit.customers.id,
+          mobile_number: customer_unit.customers.mobile_number,
+          customer_name: customer_unit.customers.customer_name,
+          customer_type_id: customer_unit.customers.customer_types.id,
+          customer_type_name: customer_unit.customers.customer_types[`${language}_name`],
+          marital_status_id: customer_unit.customers.marital_statuses.id,
+          marital_status_name: customer_unit.customers.marital_statuses[`${language}_name`],
+          religion_id: customer_unit.customers.religions.id,
+          religion_name: customer_unit.customers.religions[`${language}_name`],
+          country_id: customer_unit.customers.countries.id,
+          country_name: customer_unit.customers.countries[`${language}_name`],
+          id_type_id: customer_unit.customers.id_types.id,
+          id_type_name: customer_unit.customers.id_types[`${language}_name`],
+          ownership_type_id: customer_unit.ownership_types.id,
+          ownership_type_name: customer_unit.ownership_types[`${language}_name`],
+          sign_date: customer_unit.sign_date,
+          contract_number: customer_unit.contract_number,
+
+        }))
       }
     });
 
@@ -130,27 +154,30 @@ export class ProjectsService {
         unit_specifications: {
           include: {
             unit_types: { select: { id: true, [`${language}_name`]: true } },
-            locations: { select: { id: true, [`${language}_name`]: true } }
+            locations: { include: { locations: true } },
+          }
+        },
+        customer_units: {
+          include: {
+            customers: {
+              include: {
+                customer_types: { select: { id: true, [`${language}_name`]: true } },
+                marital_statuses: { select: { id: true, [`${language}_name`]: true } },
+                religions: { select: { id: true, [`${language}_name`]: true } },
+                countries: { select: { id: true, [`${language}_name`]: true } },
+                id_types: { select: { id: true, [`${language}_name`]: true } },
+              }
+            },
+            ownership_types: { select: { id: true, [`${language}_name`]: true } }
           }
         },
         company_project: { select: { id: true, [`${language}_name`]: true } },
-        employees_units_created_byToemployees: { select: { id: true, full_name: true } },
-        employees_units_updated_byToemployees: { select: { id: true, full_name: true } },
-        employees_units_locked_byToemployees: { select: { id: true, full_name: true } },
-        employees_units_unlocked_byToemployees: { select: { id: true, full_name: true } },
-      }
+      },
     });
-    // Get total count for pagination metadata
-    const totalCount = await this.prisma.units.count({
-      where: {
-        project_id, unit_number: { equals: unitNumber, mode: 'insensitive' }
-      }
-    });
+
     // Format response
     const formattedUnits = units.map(unit => {
-      const { unit_specifications: { unit_types, locations, ...unit_specifications }, company_project,
-        employees_units_created_byToemployees, employees_units_updated_byToemployees,
-        employees_units_locked_byToemployees, employees_units_unlocked_byToemployees, ...unitRest } = unit
+      const { unit_specifications: { unit_types, locations, ...unit_specifications }, customer_units, company_project, ...unitRest } = unit
       return {
         ...unitRest,
         project_name: company_project[`${language}_name`],
@@ -158,17 +185,28 @@ export class ProjectsService {
           ...unit_specifications,
           unit_type_id: unit_types.id,
           unit_type_name: unit_types[`${language}_name`],
-          location_id: locations.id,
-          location_name: locations[`${language}_name`]
+          locations : this.helperService.buildLocationHierarchyFromFlat(locations, language)
         },
-        created_by_id: employees_units_created_byToemployees?.id,
-        created_by: employees_units_created_byToemployees?.full_name,
-        updated_by_id: employees_units_updated_byToemployees?.id,
-        updated_by: employees_units_updated_byToemployees?.full_name,
-        locked_by_id: employees_units_locked_byToemployees?.id,
-        locked_by: employees_units_locked_byToemployees?.full_name,
-        unlocked_by_id: employees_units_unlocked_byToemployees?.id,
-        unlocked_by: employees_units_unlocked_byToemployees?.full_name,
+        customer_units: customer_units.map(customer_unit => ({
+          customer_id: customer_unit.customers.id,
+          mobile_number: customer_unit.customers.mobile_number,
+          customer_name: customer_unit.customers.customer_name,
+          customer_type_id: customer_unit.customers.customer_types.id,
+          customer_type_name: customer_unit.customers.customer_types[`${language}_name`],
+          marital_status_id: customer_unit.customers.marital_statuses.id,
+          marital_status_name: customer_unit.customers.marital_statuses[`${language}_name`],
+          religion_id: customer_unit.customers.religions.id,
+          religion_name: customer_unit.customers.religions[`${language}_name`],
+          country_id: customer_unit.customers.countries.id,
+          country_name: customer_unit.customers.countries[`${language}_name`],
+          id_type_id: customer_unit.customers.id_types.id,
+          id_type_name: customer_unit.customers.id_types[`${language}_name`],
+          ownership_type_id: customer_unit.ownership_types.id,
+          ownership_type_name: customer_unit.ownership_types[`${language}_name`],
+          sign_date: customer_unit.sign_date,
+          contract_number: customer_unit.contract_number,
+
+        }))
       }
     });
 
@@ -195,5 +233,26 @@ export class ProjectsService {
       select: { id: true, [`${language}_name`]: true }
     });
     return projects.map(project => ({ id: project.id, name: project[`${language}_name`] }));
+  }
+  async getCompanyCodes(language: string, projectId: number) {
+    const projects = await this.prisma.company_project.findMany({
+      where: { AND: [{ id: projectId }, { id: { not: projectEnums.ALL_PROJECTS } }] },
+      select: { id: true, [`${language}_name`]: true, company_code: true, project_code: true }
+    });
+    if (!projects || !projects.length ) throw new BadRequestException("No Company projects found");
+    // const companyProjects = {}
+    // projects.forEach(project => {
+    //   if (!companyProjects[`${project.id}`]) {
+    //     companyProjects[`${project.id}`] = { id: project.id, name: project[`${language}_name`], company_code: project.company_code, project_codes: [] }
+    //   }
+    //   companyProjects[`${project.id}`].project_codes.push({ id: project.id, name: project[`${language}_name`], project_code: project.project_code })
+    // }) 
+    const formattedProjects = projects.map(project => ({
+      id: project.id,
+      name: project[`${language}_name`],
+      company_code: project.company_code,
+      project_code: project.project_code
+    }))
+    return formattedProjects;
   }
 }

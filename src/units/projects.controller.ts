@@ -24,8 +24,8 @@ export class ProjectsController {
 
   @Get("units")
   async getUnits(@CurrentUser() user: interfaces.User, @CurrentPagination() pagination: interfaces.Pagination,
-    @CurrentLanguage() lang: string, @Query("unit_number") filter: string) {
-    return this.projectsService.getUnits(user, pagination, lang, filter);
+    @CurrentLanguage() lang: string, @Query() getUnitsDto: dtos.GetUnitsDto) {
+    return this.projectsService.getUnits(user, pagination, lang, getUnitsDto);
   }
 
   @Public()
@@ -39,6 +39,13 @@ export class ProjectsController {
   @Get()
   async getProjects(@CurrentLanguage() lang: string) {
     return this.projectsService.getProjects(lang);
+  }
+
+  @Public()
+  @Get(':project_id')
+  async getCompanyCodes(@CurrentLanguage() lang: string, @Param('project_id') projectId: number) {
+    await this.projectsService.checkIfProjectInPublic(projectId);
+    return this.projectsService.getCompanyCodes(lang, projectId);
   }
 
 }

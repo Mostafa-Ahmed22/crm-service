@@ -45,3 +45,29 @@ Authorization: {{authorization}}
   "sap_customer_id": "100000169",
   "birth_date": null
 }
+
+#################### get customers
+GET {{host}}/customers?page=1&limit=3&customer_name=ابراهيم
+Content-Type: application/json
+Authorization: {{authorization}}
+
+#################### assign unit to customer
+POST {{host}}/customers/assign-unit-to-customer
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "customer_id": 10,
+  "unit_id": 6,
+  //"project_id": 1,
+  "start_date": "2026-01-01",
+  "sign_date": "2026-01-01",
+  //"end_date": "2024-12-31",
+  "ownership_id": 2,
+  "contract_number": "C-12345"
+}
+
+##################### get customer by mobile number
+GET {{host}}/customers/mobile/01124284915
+Content-Type: application/json
+Authorization: {{authorization}}

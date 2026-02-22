@@ -50,6 +50,7 @@ export class RolesService {
       const roles = await this.prisma.roles.findMany({
         where: {
           id: filter.role_id,
+          is_deleted: isDeleteStatusEnums.NOT_DELETED,
           created_by: { not: null }, [`${language}_name`]: { contains: filter.role_name, mode: 'insensitive' },
           ...(userRoleName !== superAdminEnums.ROLE_EN_NAME ? { company_project_id: company_project_id } : {})
         },
@@ -60,12 +61,11 @@ export class RolesService {
       // Get total count for pagination metadata
       const totalCount = await this.prisma.roles.count({
         where: {
-          created_by: { not: null },
-          [`${language}_name`]: { contains: filter.role_name, mode: 'insensitive' },
-          ...(userRoleName !== superAdminEnums.ROLE_EN_NAME
-            ? { company_project_id: company_project_id }
-            : {})
-        }
+          id: filter.role_id,
+          is_deleted: isDeleteStatusEnums.NOT_DELETED,
+          created_by: { not: null }, [`${language}_name`]: { contains: filter.role_name, mode: 'insensitive' },
+          ...(userRoleName !== superAdminEnums.ROLE_EN_NAME ? { company_project_id: company_project_id } : {})
+        },
       });
   
       // Transform into [{id, name}]

@@ -588,7 +588,7 @@ Authorization: {{authorization}}
 }
 
 ############################## get services
-GET {{host}}/definitions/services?page=1&limit=1&department_id=1&start_date=2023-01-01
+GET {{host}}/definitions/services?page=1&limit=1&service_id=4
 Content-Type: application/json
 Authorization: {{authorization}}
 lang:en
@@ -877,6 +877,19 @@ Authorization: {{authorization}}
     { "en_name": "Trouble Maker", "ar_name": "مثير للمشاكل" }
   ]
 }
+
+########################## Create ownership types
+POST {{host}}/definitions/ownership-types
+Content-Type: application/json
+Authorization: {{authorization}}
+
+{
+  "ownership_types" : [
+    { "en_name": "Owner", "ar_name": "مالك" },
+    { "en_name": "Renter", "ar_name": "مستأجر" }
+  ]
+}
+
 
 ############################## get all dropdown
 GET {{host}}/definitions/all-dropdowns

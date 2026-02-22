@@ -148,4 +148,9 @@ export class DefinitionsController {
     return this.definitionsService.createUnitType(user, body);
   }
 
+  @Roles(superAdminEnums.ROLE_EN_NAME)
+  @Post('ownership-types')
+  async createOwnershipType(@CurrentUser() user: interfaces.User, @Body() body: dtos.CreateOwnershipTypesDto) {
+    return this.definitionsService.createOwnershipType(user, body);
+  } 
 }

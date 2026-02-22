@@ -64,4 +64,52 @@ export class HelperService {
   ): LocationNode[] {
     return this.buildLocationHierarchy(locations, language);
   }
+  private flattenLocations(location: LocationEntity): LocationEntity[] {
+    const results: LocationEntity[] = [];
+    let current: LocationEntity | undefined = location;
+    while (current) {
+      results.push(current);
+      current = current.locations as LocationEntity | undefined;
+    }
+    return results.reverse();
+  }
+
+  // buildLocationHierarchyFromFlat(locations: LocationEntity[], language: string): LocationNode[] {
+  buildLocationHierarchyFromFlat(location: LocationEntity, language: string): LocationNode[] {
+    const locations:LocationEntity[] = this.flattenLocations(location);
+    const idToNode: Record<number, LocationNode> = {};
+    for (const loc of locations) {
+      idToNode[loc.id] = {
+        id: loc.id,
+        name: loc[`${language}_name`] ?? loc.en_name,
+        parent_location_id: loc.parent_location_id,
+        children: []
+      };
+    }
+    const roots: LocationNode[] = [];
+    for (const loc of locations) {
+      if (loc.parent_location_id && idToNode[loc.parent_location_id]) {
+        idToNode[loc.parent_location_id].children.push(idToNode[loc.id]);
+      } else {
+        roots.push(idToNode[loc.id]);
+      }
+    }
+    return roots;
+}
+
+//   private buildLocationHierarchyNested(location: LocationEntity, language: string): LocationNode {
+//     return {
+//       id: location.id,
+//       name: location[`${language}_name`] ?? location.en_name,
+//       parent_location_id: location.parent_location_id,
+//       children: location.locations
+//         ? [this.buildLocationHierarchyNested(location.locations, language)]
+//         : [],
+//     };
+//   }
+
+//    getLocationHierarchyNested(locations: LocationEntity, language: string): LocationNode[] {
+//   return [this.buildLocationHierarchyNested(locations, language)];
+// }
+  
 }
